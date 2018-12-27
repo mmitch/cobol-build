@@ -1,4 +1,5 @@
 export GNUCOBOL_SRC := http://gnu.c3sl.ufpr.br/alpha/gnucobol/gnucobol-3.0-rc1.tar.xz
+export CUTPATH=$(abspath cobol-unit-test/)
 
 all:	build test
 
@@ -10,7 +11,7 @@ clean:
 	make -C cobol clean-all
 
 test:
-	echo running tests - coming soon
+	make -C cobol test-all
 
 install-gnucobol:
 	make -C gnucobol3 download install
