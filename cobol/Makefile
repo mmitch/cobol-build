@@ -22,7 +22,9 @@ clean-all:
 
 SRCS = $(wildcard src/*.cbl)
 
-build:
+build:	$(BINARY)
+
+$(BINARY): $(SRCS)
 	$(COBC) -x -o $(BINARY) $(SRCS)
 
 clean:
