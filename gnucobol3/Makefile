@@ -13,7 +13,9 @@ download:
 		echo "$(GNUCOBOL_SRC)" > $(STAMP); \
 	fi
 
-install:
-	cd latest && ./configure
+install: latest/config.h
 	make -C latest install
 	ldconfig
+
+latest/config.h: latest/config.h.in
+	cd latest && ./configure
