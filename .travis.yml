@@ -11,10 +11,10 @@ before_install:
   - sudo make install-gnucobol
 
 install:
-  - echo here be the installation
+  - make build
   
 script:
-  - echo here be the test run
+  - make test
 
 cache:
   directories:
