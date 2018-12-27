@@ -1,24 +1,22 @@
 COBC    := cobc
 SUBDIRS := $(shell find . -mindepth 1 -maxdepth 1 -type d)
 
-build-all:
+define make_subdirs
 	for SUBDIR in $(SUBDIRS); do \
 		if [ -e $$SUBDIR/Makefile ]; then \
-			make -C $$SUBDIR build; \
+			make -C $$SUBDIR $(1); \
 		else \
-			make -C $$SUBDIR -f ../Makefile build BINARY=$$SUBDIR; \
+			make -C $$SUBDIR -f ../Makefile $(1) BINARY=$$SUBDIR; \
 		fi \
 	done
+endef
+
+build-all:
+	$(call make_subdirs,build)
 
 clean-all:
 	rm -f *~
-	for SUBDIR in $(SUBDIRS); do \
-		if [ -e $$SUBDIR/Makefile ]; then \
-			make -C $$SUBDIR clean; \
-		else \
-			make -C $$SUBDIR -f ../Makefile clean BINARY=$$SUBDIR; \
-		fi \
-	done
+	$(call make_subdirs,clean)
 
 SRCS = $(wildcard src/*.cbl)
 
