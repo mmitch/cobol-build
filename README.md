@@ -7,9 +7,9 @@ This repository contains a template for a COBOL development
 environment with the following features:
 
 - basic Makefiles with ``build``, ``test`` and ``clean`` targets
-- (Cobol unit testing
-  framework)[https://github.com/neopragma/cobol-unit-test] included
-- ready-to-use (TravisCI integration)[https://travis-ci.org]
+- [Cobol unit testing framework](https://github.com/neopragma/cobol-unit-test)
+  included
+- ready-to-use [TravisCI integration](https://travis-ci.org)
 
 
 how to use
