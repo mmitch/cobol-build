@@ -33,6 +33,8 @@ ZUTZCPC: $(CUTPATH)/src/main/cobol/ZUTZCPC.CBL
 # targets for projekt subdirectories when no Makefile exists
 
 SRCS = $(wildcard src/*.cbl)
+TESTRUNDIR := test-run
+
 
 build:	$(BINARY)
 
@@ -41,18 +43,22 @@ $(BINARY): $(SRCS)
 
 clean:
 	rm -f $(BINARY)
-	rm -f unittest SRCPRG UTSTCFG UTESTS TESTPRG
+	rm -rf $(TESTRUNDIR)
 	rm -f src/*~
 	rm -f test/*~
 
 TESTS = $(wildcard test/*.cbl)
 
 test:
-	echo ZUTZCWS > UTSTCFG
+	mkdir -p $(TESTRUNDIR)
+	echo ZUTZCWS > $(TESTRUNDIR)/UTSTCFG
 	for TEST in $(TESTS); do \
-		cp $(SRCS) SRCPRG && \
-		cp $$TEST UTESTS && \
-		../ZUTZCPC && \
-		$(COBC) -x --std=ibm -o unittest -I $(CUTCOPY) TESTPRG && \
-		./unittest; \
+		cp $(SRCS) $(TESTRUNDIR)/SRCPRG && \
+		cp $$TEST $(TESTRUNDIR)/UTESTS && \
+		( \
+			cd $(TESTRUNDIR) && \
+			../../ZUTZCPC && \
+			$(COBC) -x --std=ibm -o unittest -I $(CUTCOPY) TESTPRG && \
+			./unittest \
+		) ; \
 	done
