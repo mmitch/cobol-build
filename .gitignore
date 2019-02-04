@@ -1,4 +1,5 @@
 *~
 gnucobol3/latest/
 cobol/ZUTZCPC
+cobol/*/target/
 cobol/*/test-run/

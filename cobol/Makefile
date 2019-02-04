@@ -1,13 +1,14 @@
-SUBDIRS := $(shell find . -mindepth 1 -maxdepth 1 -type d)
-COBC    := cobc
-CUTCOPY := $(CUTPATH)/src/main/cobol/copy
+SUBDIRS  := $(shell find . -mindepth 1 -maxdepth 1 -type d)
+COBC     := cobc
+CUTCOPY  := $(CUTPATH)/src/main/cobol/copy
+TARGETDIR := target
 
 define make_subdirs
 	for SUBDIR in $(SUBDIRS); do \
 		if [ -e $$SUBDIR/Makefile ]; then \
 			make -C $$SUBDIR $(1); \
 		else \
-			make -C $$SUBDIR -f ../Makefile $(1) BINARY=$$SUBDIR; \
+			make -C $$SUBDIR -f ../Makefile $(1) BINARY=$(TARGETDIR)/$$SUBDIR; \
 		fi \
 	done
 endef
@@ -39,10 +40,11 @@ TESTRUNDIR := test-run
 build:	$(BINARY)
 
 $(BINARY): $(SRCS)
+	mkdir -p $(TARGETDIR)
 	$(COBC) -x --std=ibm -o $(BINARY) $(SRCS)
 
 clean:
-	rm -f $(BINARY)
+	rm -rf $(TARGETDIR)
 	rm -rf $(TESTRUNDIR)
 	rm -f src/*~
 	rm -f test/*~
