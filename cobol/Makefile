@@ -31,7 +31,7 @@ ZUTZCPC: $(CUTPATH)/src/main/cobol/ZUTZCPC.CBL
 	$(COBC) -x --std=ibm -o $@ $<
 
 
-# targets for projekt subdirectories when no Makefile exists
+# targets for project subdirectories when no Makefile exists
 
 SRCS = $(wildcard src/*.cbl)
 TESTRUNDIR := test-run
