@@ -1,6 +1,7 @@
-SUBDIRS  := $(shell find . -mindepth 1 -maxdepth 1 -type d)
-COBC     := cobc
-CUTCOPY  := $(CUTPATH)/src/main/cobol/copy
+SUBDIRS   := $(shell find . -mindepth 1 -maxdepth 1 -type d)
+COBC      := cobc
+CUTCOPY   := $(CUTPATH)/src/main/cobol/copy
+BUILDDIR  := build
 TARGETDIR := target
 
 define make_subdirs
@@ -13,7 +14,7 @@ define make_subdirs
 	done
 endef
 
-.PHONY: build-all clean-all test-all build clean test
+.PHONY: build-all clean-all test-all build build-dir clean test
 
 build-all:
 	$(call make_subdirs,build)
@@ -37,13 +38,17 @@ SRCS = $(wildcard src/*.cbl)
 TESTRUNDIR := test-run
 
 
-build:	$(BINARY)
+build:	build-dir $(BINARY)
+
+build-dir:
+	mkdir -p $(BUILDDIR)
 
 $(BINARY): $(SRCS)
 	mkdir -p $(TARGETDIR)
 	$(COBC) -x --std=ibm -o $(BINARY) $(SRCS)
 
 clean:
+	rm -rf $(BUILDDIR)
 	rm -rf $(TARGETDIR)
 	rm -rf $(TESTRUNDIR)
 	rm -f src/*~
