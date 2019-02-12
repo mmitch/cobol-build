@@ -8,14 +8,14 @@ check-submodules:
 	git submodule update
 
 build:
-	make -C cobol build-all
+	make -C cobol build
 
 clean:
 	rm -f *~
-	make -C cobol clean-all
+	make -C cobol clean
 
 test:
-	make -C cobol test-all
+	make -C cobol test
 
 install-gnucobol:
 	make -C gnucobol3 download install

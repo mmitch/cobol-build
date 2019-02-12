@@ -24,17 +24,17 @@ define make_builddirs
 	done
 endef
 
-.PHONY: build-all clean-all test-all
+.PHONY: build clean test
 
-build-all: genmk
+build: genmk
 	$(call make_builddirs,build)
 
-clean-all:
+clean:
 	rm -f *~
 	rm -f ZUTZCPC
 	$(call make_subdirs,clean)
 
-test-all: ZUTZCPC genmk
+test: ZUTZCPC genmk
 	$(call make_builddirs,test)
 
 genmk:
