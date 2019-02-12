@@ -1,0 +1,6 @@
+# this is a comment
+# comments and empty lines are ignored
+
+STATIC helloworld FROM helloworld.cbl
+
+TEST helloworld.cbl WITH addition.cbl

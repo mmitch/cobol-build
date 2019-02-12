@@ -1,0 +1,22 @@
+# targets for project subdirectories
+# calles from one directory above
+
+.PHONY: genmk clean test
+
+MAKEFILE   := $(BUILDDIR)/Makefile
+
+genmk: create-dirs $(MAKEFILE)
+
+create-dirs:
+	mkdir -p $(BUILDDIR)
+	mkdir -p $(TARGETDIR)
+
+$(MAKEFILE): build.txt ../genmk.sh
+	../genmk.sh < $< > $@
+
+clean:
+	rm -rf $(BUILDDIR)
+	rm -rf $(TARGETDIR)
+	rm -rf $(TESTRUNDIR)
+	rm -f $(SRCDIR)/*~
+	rm -f test/*~

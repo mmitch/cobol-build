@@ -1,71 +1,45 @@
-SUBDIRS   := $(shell find . -mindepth 1 -maxdepth 1 -type d)
-COBC      := cobc
-CUTCOPY   := $(CUTPATH)/src/main/cobol/copy
-BUILDDIR  := build
-TARGETDIR := target
+COBC       := cobc
+COBFLAGS   := --std=ibm
+CUTCOPY    := $(CUTPATH)/src/main/cobol/copy
+SOURCEDIR  := src
+BUILDDIR   := build
+TARGETDIR  := target
+TESTDIR    := test
+TESTRUNDIR := test-run
+RECIPES    := $(wildcard */build.txt)
+MAKEFILES  := $(RECIPES:/build.txt=/build/Makefile)
+SUBDIRS    := $(RECIPES:/build.txt=)
+
+export COBC COBFLAGS SOURCEDIR BUILDDIR TARGETDIR TESTDIR TESTRUNDIR CUTCOPY
 
 define make_subdirs
 	for SUBDIR in $(SUBDIRS); do \
-		if [ -e $$SUBDIR/Makefile ]; then \
-			make -C $$SUBDIR $(1); \
-		else \
-			make -C $$SUBDIR -f ../Makefile $(1) BINARY=$(TARGETDIR)/$$SUBDIR; \
-		fi \
+		make -C $$SUBDIR -f ../Makefile.sub $(1); \
 	done
 endef
 
-.PHONY: build-all clean-all test-all build build-dir clean test
+define make_builddirs
+	for SUBDIR in $(SUBDIRS); do \
+		make -C $$SUBDIR/ -f $(BUILDDIR)/Makefile $(1); \
+	done
+endef
 
-build-all:
-	$(call make_subdirs,build)
+.PHONY: build-all clean-all test-all
+
+build-all: genmk
+	$(call make_builddirs,build)
 
 clean-all:
 	rm -f *~
 	rm -f ZUTZCPC
 	$(call make_subdirs,clean)
 
-test-all: ZUTZCPC
-	$(call make_subdirs,test)
+test-all: ZUTZCPC genmk
+	$(call make_builddirs,test)
+
+genmk:
+	$(call make_subdirs,genmk)
 
 # precompiler for unit-tests
 ZUTZCPC: $(CUTPATH)/src/main/cobol/ZUTZCPC.CBL
-	$(COBC) -x --std=ibm -o $@ $<
-
-
-# targets for project subdirectories when no Makefile exists
-
-SRCS = $(wildcard src/*.cbl)
-TESTRUNDIR := test-run
-
-
-build:	build-dir $(BINARY)
-
-build-dir:
-	mkdir -p $(BUILDDIR)
-
-$(BINARY): $(SRCS)
-	mkdir -p $(TARGETDIR)
-	$(COBC) -x --std=ibm -o $(BINARY) $(SRCS)
-
-clean:
-	rm -rf $(BUILDDIR)
-	rm -rf $(TARGETDIR)
-	rm -rf $(TESTRUNDIR)
-	rm -f src/*~
-	rm -f test/*~
-
-TESTS = $(wildcard test/*.cbl)
-
-test:
-	mkdir -p $(TESTRUNDIR)
-	echo ZUTZCWS > $(TESTRUNDIR)/UTSTCFG
-	for TEST in $(TESTS); do \
-		cp $(SRCS) $(TESTRUNDIR)/SRCPRG && \
-		cp $$TEST $(TESTRUNDIR)/UTESTS && \
-		( \
-			cd $(TESTRUNDIR) && \
-			../../ZUTZCPC && \
-			$(COBC) -x --std=ibm -o unittest -I $(CUTCOPY) TESTPRG && \
-			./unittest \
-		) ; \
-	done
+	$(COBC) -x $(COBFLAGS) -o $@ $<
