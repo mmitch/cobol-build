@@ -1,11 +1,13 @@
-COBC       := cobc
-COBFLAGS   := --std=ibm
-CUTCOPY    := $(CUTPATH)/src/main/cobol/copy
 SOURCEDIR  := src
 BUILDDIR   := build
 TARGETDIR  := target
 TESTDIR    := test
 TESTRUNDIR := test-run
+
+COBC       := cobc
+COBFLAGS   := --std=ibm -I $(SOURCEDIR)/copy
+CUTCOPY    := $(CUTPATH)/src/main/cobol/copy
+
 RECIPES    := $(wildcard */build.txt)
 MAKEFILES  := $(RECIPES:/build.txt=/build/Makefile)
 SUBDIRS    := $(RECIPES:/build.txt=)
