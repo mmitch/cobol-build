@@ -13,7 +13,7 @@ fi
 echo ".PHONY: build test prepare-test"
 echo
 
-declare -A TARGETS TESTS
+declare -A TARGETS OBJECTS MAINS TESTS
 
 while IFS= read -r LINE; do
 
@@ -34,13 +34,23 @@ while IFS= read -r LINE; do
 	    TARGET="$1"
 	    shift 2
 	    echo -n "\$(TARGETDIR)/$TARGET:"
+	    MAIN=""
 	    for SOURCE in "$@"; do
-		echo -n " \$(SOURCEDIR)/$SOURCE"
+		OBJECT="\$(BUILDDIR)/${SOURCE%.*}.o"
+		OBJECTS[$OBJECT]="$SOURCE"
+		echo -n " $OBJECT"
+
+		if [ -z "$MAIN" ]; then
+		    MAIN="$OBJECT"
+		fi
 	    done
 	    echo
 	    echo '	$(COBC) -x $(COBFLAGS) -o $@ $<'
 	    echo
 	    TARGETS[$TARGET]="$*"
+
+	    # main program needs both -c and -x, otherwise <undefined reference to `main'>
+	    MAINS[$OBJECT]="-x"
 	    ;;
 	
 	MODULE|module)
@@ -48,7 +58,9 @@ while IFS= read -r LINE; do
 	    shift 2
 	    echo -n "\$(TARGETDIR)/$TARGET:"
 	    for SOURCE in "$@"; do
-		echo -n " \$(SOURCEDIR)/$SOURCE"
+		OBJECT="\$(BUILDDIR)/${SOURCE%.*}.o"
+		OBJECTS[$OBJECT]="$SOURCE"
+		echo -n " $OBJECT"
 	    done
 	    echo
 	    echo '	$(COBC) -m $(COBFLAGS) -o $@ $<'
@@ -83,16 +95,26 @@ EOF
     
 done
 
+for OBJECT in ${!OBJECTS[*]}; do
+    SOURCE="${OBJECTS[$OBJECT]}"
+    MAIN="${MAINS[$OBJECT]}"
+    echo "$OBJECT: \$(SOURCEDIR)/$SOURCE"
+    echo "	\$(COBC) -c $MAIN \$(COBFLAGS) -o \$@ \$<"
+    echo
+done
+
 echo -n "build:"
 for TARGET in ${!TARGETS[*]}; do
     echo -n " \$(TARGETDIR)/$TARGET"
 done
+echo
 echo
 
 echo -n "test: prepare-test"
 for TEST in ${!TESTS[*]}; do
     echo -n " \$(TESTRUNDIR)/$TEST"
 done
+echo
 echo
 
 echo 'prepare-test:'
