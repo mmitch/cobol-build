@@ -45,12 +45,12 @@ while IFS= read -r LINE; do
 		fi
 	    done
 	    echo
-	    echo '	$(COBC) -x $(COBFLAGS) -o $@ $<'
+	    echo '	$(COBC) -x $(COBFLAGS) -o $@ $^'
 	    echo
 	    TARGETS[$TARGET]="$*"
 
 	    # main program needs both -c and -x, otherwise <undefined reference to `main'>
-	    MAINS[$OBJECT]="-x"
+	    MAINS[$MAIN]="-x"
 	    ;;
 	
 	MODULE|module)
@@ -63,7 +63,7 @@ while IFS= read -r LINE; do
 		echo -n " $OBJECT"
 	    done
 	    echo
-	    echo '	$(COBC) -m $(COBFLAGS) -o $@ $<'
+	    echo '	$(COBC) -m $(COBFLAGS) -o $@ $^'
 	    echo
 	    TARGETS[$TARGET]="$*"
 	    ;;
