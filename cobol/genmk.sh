@@ -38,7 +38,7 @@ while IFS= read -r LINE; do
 		echo -n " \$(SOURCEDIR)/$SOURCE"
 	    done
 	    echo
-	    echo '	$(COBC) -x $(COBFLAGS) -o $@ $<'
+	    echo '	$(COBC) -x -save-temps=$(BUILDDIR) $(COBFLAGS) -o $@ $<'
 	    echo
 	    TARGETS[$TARGET]="$*"
 	    ;;
