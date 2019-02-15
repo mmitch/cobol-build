@@ -1,7 +1,5 @@
-# this is a comment
-# comments and empty lines are ignored
-
-BINARY calculator  FROM calculator.cbl
-MODULE addition    FROM addition.cbl
-MODULE subtraction FROM subtraction.cbl
-
+# you have to set COB_LIBRARY_PATH to your target directory
+# otherwise the modules will not be found on execution of the binary
+BINARY calculator   FROM calculator.cbl
+MODULE addition     FROM addition.cbl
+MODULE subtraction  FROM subtraction.cbl
