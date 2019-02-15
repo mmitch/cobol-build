@@ -43,6 +43,19 @@ while IFS= read -r LINE; do
 	    TARGETS[$TARGET]="$*"
 	    ;;
 	
+	MODULE|module)
+	    TARGET="$1.so"
+	    shift 2
+	    echo -n "\$(TARGETDIR)/$TARGET:"
+	    for SOURCE in "$@"; do
+		echo -n " \$(SOURCEDIR)/$SOURCE"
+	    done
+	    echo
+	    echo '	$(COBC) -m -save-temps=$(BUILDDIR) $(COBFLAGS) -o $@ $<'
+	    echo
+	    TARGETS[$TARGET]="$*"
+	    ;;
+	
 	TEST|test)
 	    TEST="$1"
 	    shift 2

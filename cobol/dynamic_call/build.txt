@@ -1,0 +1,7 @@
+# this is a comment
+# comments and empty lines are ignored
+
+BINARY calculator  FROM calculator.cbl
+MODULE addition    FROM addition.cbl
+MODULE subtraction FROM subtraction.cbl
+
