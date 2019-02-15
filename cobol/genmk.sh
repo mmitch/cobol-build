@@ -30,7 +30,7 @@ while IFS= read -r LINE; do
     
     case "$COMMAND" in
 	
-	STATIC|static)
+	BINARY|binary)
 	    TARGET="$1"
 	    shift 2
 	    echo -n "\$(TARGETDIR)/$TARGET:"
