@@ -17,12 +17,12 @@ how to use
  
 1. clone or fork this repository
 2. put your code in ``cobol/$PROJECT/src``
-   - use ``*.cbl`` as extension
+   - use ``*.cbl`` or ``*.cob`` as extension
    - ``$PROJECT`` will be the name of the generated executable
    - multiple source files will be combined into the executable, but
      the tests currently only run correctly with a single source file
 3. put your tests in ``cobol/$PROJECT/test``
-   - use ``*.cbl`` as extension
+   - use ``*.cbl`` or ``*.cob`` as extension
 4. remove the demo project at ``cobol/helloworld``
 5. update this ``README.md``
    - at least switch the build status button to _your_ repository
