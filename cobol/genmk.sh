@@ -63,7 +63,7 @@ while IFS= read -r LINE; do
 		echo -n " $OBJECT"
 	    done
 	    echo
-	    echo '	$(COBC) -m $(COBFLAGS) -o $@ $^'
+	    echo '	$(COBC) -b $(COBFLAGS) -o $@ $^'
 	    echo
 	    TARGETS[$TARGET]="$*"
 	    ;;
