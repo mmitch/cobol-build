@@ -1,18 +1,21 @@
 SOURCEDIR  := src
+COPYDIR    := src/copy
 BUILDDIR   := build
 TARGETDIR  := target
 TESTDIR    := test
 TESTRUNDIR := test-run
 
+export SOURCEDIR COPYDIR BUILDDIR TARGETDIR TESTDIR TESTRUNDIR
+
 COBC       := cobc
-COBFLAGS   := --std=ibm -I $(SOURCEDIR)/copy
+COBFLAGS   := --std=ibm -I $(COPYDIR)
 CUTCOPY    := $(CUTPATH)/src/main/cobol/copy
+
+export COBC COBFLAGS CUTCOPY
 
 RECIPES    := $(wildcard */build.txt)
 MAKEFILES  := $(RECIPES:/build.txt=/build/Makefile)
 SUBDIRS    := $(RECIPES:/build.txt=)
-
-export COBC COBFLAGS SOURCEDIR BUILDDIR TARGETDIR TESTDIR TESTRUNDIR CUTCOPY
 
 define make_subdirs
 	for SUBDIR in $(SUBDIRS); do \

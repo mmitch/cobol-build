@@ -18,5 +18,7 @@ clean:
 	rm -rf $(BUILDDIR)
 	rm -rf $(TARGETDIR)
 	rm -rf $(TESTRUNDIR)
-	rm -f $(SRCDIR)/*~
+	rm -f $(SOURCEDIR)/*~
+	rm -f $(COPYDIR)/*~
+	rm -f *~
 	rm -f test/*~
