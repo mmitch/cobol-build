@@ -1,4 +1,4 @@
-           TESTSUITE 'simple addition tests for helloworld.cob'
+           TESTSUITE 'simple addition tests for helloworld.cbl'
 
            TESTCASE 'one plus two equals three'
            MOVE 1 TO SUMMAND-1
