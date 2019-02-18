@@ -2,7 +2,11 @@
 
 abend()
 {
-    echo "$0: $*" 1>&2
+    exec 1>&2
+    HAVE_TPUT="$(command -v tput || true)"
+    [ "$HAVE_TPUT" ] && tput setaf 1 && tput bold
+    echo "$*"
+    [ "$HAVE_TPUT" ] && tput sgr0
     exit 1
 }
 
