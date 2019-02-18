@@ -7,6 +7,9 @@ abend()
     [ "$HAVE_TPUT" ] && tput setaf 1 && tput bold
     echo "$0: $*"
     [ "$HAVE_TPUT" ] && tput sgr0
+
+    [ $OUTPUT != '-stdout' ] && rm "$OUTPUT"
+	
     exit 1
 }
 
@@ -64,6 +67,13 @@ parse_build()
 
 if [ "${BASH_VERSION%%.*}" -lt 4 ]; then
     abend 'need at least bash v4 for associative arrays'
+fi
+
+OUTPUT="$1"
+if [ $OUTPUT ]; then
+    exec > "$OUTPUT"
+else
+    OUTPUT="-stdout"
 fi
 
 echo ".PHONY: build test prepare-test"

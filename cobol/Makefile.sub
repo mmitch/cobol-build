@@ -12,7 +12,7 @@ create-dirs:
 	mkdir -p $(TARGETDIR)
 
 $(MAKEFILE): build.txt ../genmk.sh
-	../genmk.sh < $< > $@
+	../genmk.sh $@ < $<
 
 clean:
 	rm -rf $(BUILDDIR)
