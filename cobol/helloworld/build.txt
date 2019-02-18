@@ -3,4 +3,4 @@
 
 BUILD BINARY helloworld USING helloworld.cbl
 
-TEST helloworld.cbl WITH addition.cbl
+TEST SOURCE helloworld.cbl USING addition.cbl

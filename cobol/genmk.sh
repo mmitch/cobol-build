@@ -63,6 +63,44 @@ parse_build()
     fi
 }
 
+parse_test()
+{
+    TYPE="$1"
+    shift
+
+    case "$TYPE" in
+
+	SOURCE|source)
+	    TEST="$1"
+	    TYPE=BINARY
+	    ;;
+
+	*)
+	    abend "unknown test target type: $TYPE"
+	;;
+    esac
+    shift
+
+    [ "$1" = USING ] || abend "expected USING, but got: $2"
+    shift
+
+    echo "\$(TESTRUNDIR)/$TEST:"
+    echo "	cp \$(SOURCEDIR)/$TEST \$(TESTRUNDIR)/SRCPRG"
+    for SOURCE in "$@"; do
+	cat <<EOF
+	cp \$(TESTDIR)/$SOURCE \$(TESTRUNDIR)/UTESTS
+	( \\
+		cd \$(TESTRUNDIR) && \\
+		../../ZUTZCPC && \\
+		\$(COBC) -x \$(COBFLAGS) -o unittest -I \$(CUTCOPY) TESTPRG && \\
+		./unittest \\
+	)
+EOF
+    done
+    echo
+    TESTS[$TEST]="$*"
+}
+
 ###########
 
 if [ "${BASH_VERSION%%.*}" -lt 4 ]; then
@@ -101,23 +139,7 @@ while IFS= read -r LINE; do
 	    ;;
 
 	TEST|test)
-	    TEST="$1"
-	    shift 2
-	    echo "\$(TESTRUNDIR)/$TEST:"
-	    echo "	cp \$(SOURCEDIR)/$TEST \$(TESTRUNDIR)/SRCPRG"
-	    for SOURCE in "$@"; do
-		cat <<EOF
-	cp \$(TESTDIR)/$SOURCE \$(TESTRUNDIR)/UTESTS
-	( \\
-		cd \$(TESTRUNDIR) && \\
-		../../ZUTZCPC && \\
-		\$(COBC) -x \$(COBFLAGS) -o unittest -I \$(CUTCOPY) TESTPRG && \\
-		./unittest \\
-	)
-EOF
-	    done
-	    echo
-	    TESTS[$TEST]="$*"
+	    parse_test "$@"
 	    ;;
 	
 	*)
@@ -129,9 +151,9 @@ done
 
 for OBJECT in ${!OBJECTS[*]}; do
     SOURCE="${OBJECTS[$OBJECT]}"
-    OBJECTFLAGS="${OBJECTFLAGS[$OBJECT]}"
+    EXTRAFLAGS="${OBJECTFLAGS[$OBJECT]}"
     echo "$OBJECT: \$(SOURCEDIR)/$SOURCE"
-    echo "	\$(COBC) -c $OBJECTFLAGS \$(COBFLAGS) -o \$@ \$<"
+    echo "	\$(COBC) -c $EXTRAFLAGS \$(COBFLAGS) -o \$@ \$<"
     echo
 done
 
