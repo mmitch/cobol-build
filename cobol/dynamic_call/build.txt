@@ -1,5 +1,5 @@
 # you have to set COB_LIBRARY_PATH to your target directory
 # otherwise the modules will not be found on execution of the binary
-BINARY calculator   FROM calculator.cbl
-MODULE addition     FROM addition.cbl
-MODULE subtraction  FROM subtraction.cbl
+BUILD BINARY calculator  USING calculator.cbl
+BUILD MODULE addition    USING addition.cbl
+BUILD MODULE subtraction USING subtraction.cbl

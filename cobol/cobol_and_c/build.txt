@@ -1,1 +1,1 @@
-BINARY calculator  FROM calculator.cbl addition.c subtraction.cbl
+BUILD BINARY calculator USING calculator.cbl addition.c subtraction.cbl
