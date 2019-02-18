@@ -1,1 +1,4 @@
 BUILD BINARY calculator USING calculator.cbl addition.cbl subtraction.cbl
+
+TEST SOURCE addition.cbl    WITH DRIVER addition-driver.cbl    USING addition-test.cbl
+TEST SOURCE subtraction.cbl WITH DRIVER subtraction-driver.cbl USING subtraction-test.cbl
