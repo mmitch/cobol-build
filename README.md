@@ -66,14 +66,48 @@ build projects
 Every project to be built should have the following layout:
 
 ```
-
+ project/
+ +-- build.txt
+ +-- src/
+ |   +-- source file 1
+ |   +-- source file 2
+ |   `-- source file ...
+ `-- test/
+     +-- test case 1
+     +-- test case 2
+     `-- test driver ...
 ```
 
 The build process will create some additional directories that will be
 removed on ``make clean``:
 
 ```
-
+ project/
+ +-- build.txt
+ +-- build/
+ |   +-- Makefile
+ |   +-- object file 1
+ |   +-- object file 2
+ |   `-- object file ...
+ +-- src/
+ |   +-- source file 1
+ |   +-- source file 2
+ |   `-- source file ...
+ +-- target/
+ |   +-- binary 1
+ |   +-- module 1
+ |   `-- module ...
+ +-- test/
+ |   +-- test driver 1
+ |   +-- test case 1
+ |   `-- test case ...
+ `-- test-run/
+     +-- UTESTS
+     +-- UTESTCFG
+     +-- TESTPRG
+     +-- SRCPRG
+     +-- unittest
+     `-- driver
 ```
 
 The file ``build.txt`` tells the build system what to build.  It is a
