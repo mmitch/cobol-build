@@ -68,14 +68,17 @@ Every project to be built should have the following layout:
 ```
  project/
  +-- build.txt
- +-- src/
- |   +-- source file 1
- |   +-- source file 2
- |   `-- source file ...
- `-- test/
-     +-- test case 1
-     +-- test case 2
-     `-- test driver ...
+ `-- src/
+     +-- main/
+     |   `-- cobol/
+     |       +-- source file 1
+     |       +-- source file 2
+     |       `-- source file ...
+     `-- test/
+         `-- cobol/
+             +-- test case 1
+             +-- test case 2
+             `-- test driver ...
 ```
 
 The build process will create some additional directories that will be
@@ -85,29 +88,33 @@ removed on ``make clean``:
  project/
  +-- build.txt
  +-- build/
- |   +-- Makefile
- |   +-- object file 1
- |   +-- object file 2
- |   `-- object file ...
+ |   +-- main/
+ |   |   +-- Makefile
+ |   |   +-- object file 1
+ |   |   +-- object file 2
+ |   |   `-- object file ...
+ |   `-- test/
+ |       +-- UTESTS
+ |       +-- UTESTCFG
+ |       +-- TESTPRG
+ |       +-- SRCPRG
+ |       +-- unittest
+ |       `-- driver
  +-- src/
- |   +-- source file 1
- |   +-- source file 2
- |   `-- source file ...
- +-- target/
- |   +-- binary 1
- |   +-- module 1
- |   `-- module ...
- +-- test/
- |   +-- test driver 1
- |   +-- test case 1
- |   `-- test case ...
- `-- test-run/
-     +-- UTESTS
-     +-- UTESTCFG
-     +-- TESTPRG
-     +-- SRCPRG
-     +-- unittest
-     `-- driver
+ |   +-- main/
+ |   |   `-- cobol/
+ |   |       +-- source file 1
+ |   |       +-- source file 2
+ |   |       `-- source file ...
+ |   `-- test/
+ |       `-- cobol/
+ |           +-- test case 1
+ |           +-- test case 2
+ |           `-- test driver ...
+ `-- target/
+     +-- binary 1
+     +-- module 1
+     `-- module ...
 ```
 
 The file ``build.txt`` tells the build system what to build.  It is a
@@ -135,16 +142,15 @@ from one or multiple source files.
  
 
 * `source-file` is the name (including the extension) of a source file.
-  It will be read from the `src/` directory and can use Copybooks from the
-  `src/copy/` directory.
-  Source files can be COBOL (`*.cob`,  `*.cbl`) or C (`*.c?`).
+  It will be read from the `src/main/cobol/` directory and can use Copybooks
+  from the `src/main/cobol/copy/` directory.
+  Source files can be COBOL (`*.cob`,  `*.cbl`) or C (`*.c`).
 
 
 ### `BUILD MODULE` statement
 
 The `BUILD MODULE` statement builds a module that can be loaded 
-dynamically
-from one or multiple source files.
+dynamically from one or multiple source files.
 
 ```
 |-- Format -----------------------------------------------------------
@@ -159,24 +165,23 @@ from one or multiple source files.
   It will be put into the `target/` directory with an extension of `.so`.
 
 * `source-file` is the name (including the extension) of a source file.
-  It will be read from the `source/` directory and can use Copybooks
-  included in the `source/copy/` directory.
-  Source files can be COBOL (`*.cob`,  `*.cbl`) or C (`*.c?`).
+  It will be read from the `src/main/cobol/` directory and can use Copybooks
+  included in the `src/main/cobol/copy/` directory.
+  Source files can be COBOL (`*.cob`,  `*.cbl`) or C (`*.c`).
 
 ### `TEST SOURCE` statement
 
 The `TEST SOURCE` statement executes one or more unit tests
 that test a given source file.
 
-The unit tests work by replacing the `PROCEDURE DIVISION` of the 
-`source-file`
-by test code generated from every `test-case`, compiling and running the 
-result.
+The unit tests work by first replacing the `PROCEDURE DIVISION` of the
+`source-file` by test code generated from every `test-case` and then
+compiling and running the resulting executable.
 
-To test dynamically loadable modules, a `driver-program` is needed to call
-the module.  `source-file` and `test-case`s are handled as before, but 
-when
-running the test the `driver-program` is executed instead of the module.
+To test dynamically loadable modules, a `driver-program` is needed to
+call the module.  `source-file` and `test-case`s are handled as
+before, but when running the test the `driver-program` is executed
+instead of the module.
 
 ```
 |-- Format -----------------------------------------------------------
@@ -192,20 +197,19 @@ running the test the `driver-program` is executed instead of the module.
 
 * `source-file` is the name (including the extension) of the source file
   to test.
-  It will be read from the `source/` directory and can use Copybooks
-  included in the `source/copy/` directory.
+  It will be read from the `src/main/cobol/` directory and can use Copybooks
+  included in the `src/main/cobol/copy/` directory.
   Source files for tests can only be COBOL (`*.cob`,  `*.cbl`).
 
-* When `WITH DRIVER` specifies the name of the `driver-program`, 
-`source-file`
-  is expected to compile to a dynamically loadable module.
+* When `WITH DRIVER` specifies the name of the `driver-program`,
+  `source-file` is expected to compile to a dynamically loadable module.
   `driver-program` is the name of source file (including the extension)
   of the driver.
-  It will be read from the `test/` directory and can use Copybooks
-  included in the `source/copy/` directory.
-  A driver can be COBOL (`*.cob`,  `*.cbl`) or C (`*.c?`).
+  It will be read from the `src/test/cobol/` directory and can use Copybooks
+  included in the `src/main/cobol/copy/` directory.
+  A driver can be COBOL (`*.cob`,  `*.cbl`) or C (`*.c`).
 
-* `test-case` is the name of a test case (including the excension)
+* `test-case` is the name of a test case (including the extension)
   to be executed.
-  It will be read from the `test/` directory.
+  It will be read from the `src/test/cobol/` directory.
   Test cases can only be COBOL (`*.cob`,  `*.cbl`).

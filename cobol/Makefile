@@ -1,9 +1,9 @@
-SOURCEDIR  := src
-COPYDIR    := src/copy
-BUILDDIR   := build
+SOURCEDIR  := src/main/cobol
+COPYDIR    := src/main/cobol/copy
+BUILDDIR   := build/main/
 TARGETDIR  := target
-TESTDIR    := test
-TESTRUNDIR := test-run
+TESTDIR    := src/test/cobol
+TESTRUNDIR := build/test/
 
 export SOURCEDIR COPYDIR BUILDDIR TARGETDIR TESTDIR TESTRUNDIR
 
