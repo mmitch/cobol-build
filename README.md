@@ -6,7 +6,7 @@ cobol-travis
 This repository contains a template for a COBOL development
 environment with the following features:
 
-- basic Makefiles with ``build``, ``test`` and ``clean`` targets
+- basic Makefiles with `build`, `test` and `clean` targets
 - [Cobol unit testing framework](https://github.com/neopragma/cobol-unit-test)
   included
 - ready-to-use [TravisCI integration](https://travis-ci.org)
@@ -16,15 +16,15 @@ how to use
 ----------
  
 1. clone or fork this repository
-2. put your code in ``cobol/$PROJECT/src``
-   - use ``*.cbl`` or ``*.cob`` as extension
-   - ``$PROJECT`` will be the name of the generated executable
+2. put your code in `cobol/$PROJECT/src`
+   - use `*.cbl` or `*.cob` as extension
+   - `$PROJECT` will be the name of the generated executable
    - multiple source files will be combined into the executable, but
      the tests currently only run correctly with a single source file
-3. put your tests in ``cobol/$PROJECT/test``
-   - use ``*.cbl`` or ``*.cob`` as extension
-4. remove the demo project at ``cobol/helloworld``
-5. update this ``README.md``
+3. put your tests in `cobol/$PROJECT/test`
+   - use `*.cbl` or `*.cob` as extension
+4. remove the demo project at `cobol/helloworld`
+5. update this `README.md`
    - at least switch the build status button to _your_ repository
 
 
@@ -33,26 +33,25 @@ dependencies
 
 You need [GNU make](http://www.gnu.org/software/make/) and
 [bash](http://tiswww.case.edu/php/chet/bash/bashtop.html) (at least
-version 4).  Debian/Ubuntu users get both via ``apt install make
-bash`` if they are not already installed.
+version 4).  Debian/Ubuntu users get both via `apt install make bash`
+if they are not already installed.
 
 You need a recent version of [GnuCOBOL](https://savannah.gnu.org/projects/gnucobol).
-Debian/Ubuntu users could try ``apt install open-cobol``.
+Debian/Ubuntu users could try `apt install open-cobol`.
 
 If your version is too old or you want to build GnuCOBOL from source,
-you can run ``sudo make install-gnucobol``.  This will install
-GnuCOBOL to ``/usr/local``.
+you can run `sudo make install-gnucobol`.  This will install
+GnuCOBOL to `/usr/local`.
 
 Older versions might work, but 
 
 ### switching the version of GnuCOBOL
 
 If you want to use another version of GnuCOBOL, change the variable
-``GNUCOBOL_SRC`` in the ``Makefile`` before running ``sudo make
-install-gnucobol``.
+`GNUCOBOL_SRC` in the `Makefile` before running `sudo make install-gnucobol`.
 
 The TravisCI integration will always install and use the version given
-in ``GNUCOBOL_SRC`` (while using a cache to reduce the build times).
+in `GNUCOBOL_SRC` (while using a cache to reduce the build times).
 
 It is probably a good idea to use the same version of GnuCOBOL in both
 your local development environment and TravisCI, so change the
@@ -82,7 +81,7 @@ Every project to be built should have the following layout:
 ```
 
 The build process will create some additional directories that will be
-removed on ``make clean``:
+removed on `make clean`:
 
 ```
  project/
@@ -117,9 +116,9 @@ removed on ``make clean``:
      `-- module ...
 ```
 
-The file ``build.txt`` tells the build system what to build.  It is a
+The file `build.txt` tells the build system what to build.  It is a
 line based text file that ignores empty lines.  Comments are
-prefixed with ``#``.
+prefixed with `#`.
 
 Available commands are:
 
