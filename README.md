@@ -34,7 +34,7 @@ dependencies
 You need [GNU make](http://www.gnu.org/software/make/) and
 [bash](http://tiswww.case.edu/php/chet/bash/bashtop.html) (at least
 version 4).  Debian/Ubuntu users get both via ``apt install make
-bash`` if it is not already installed.
+bash`` if they are not already installed.
 
 You need a recent version of [GnuCOBOL](https://savannah.gnu.org/projects/gnucobol).
 Debian/Ubuntu users could try ``apt install open-cobol``.
