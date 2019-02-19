@@ -19,13 +19,13 @@ SUBDIRS    := $(RECIPES:/build.txt=)
 
 define make_subdirs
 	for SUBDIR in $(SUBDIRS); do \
-		make -C $$SUBDIR -f ../Makefile.sub $(1) || exit; \
+		$(MAKE) -C $$SUBDIR -f ../Makefile.sub $(1) || exit; \
 	done
 endef
 
 define make_builddirs
 	for SUBDIR in $(SUBDIRS); do \
-		make -C $$SUBDIR/ -f $(BUILDDIR)/Makefile $(1) || exit; \
+		$(MAKE) -C $$SUBDIR/ -f $(BUILDDIR)/Makefile $(1) || exit; \
 	done
 endef
 
