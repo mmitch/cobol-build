@@ -34,11 +34,10 @@ export COBC COBFLAGS
 
 # COBOL Unit Test Framework
 #
-CUTPATH := cobol-unit-test/src/main/cobol
-CUTCOPY := $(abspath $(CUTPATH)/copy)
-ZUTZCPC := $(abspath ZUTZCPC)
+CUTPATH := $(abspath cobol-unit-test/src/main/cobol)
+CUTCOPY := $(CUTPATH)/copy
 
-export CUTCOPY ZUTZCPC
+export CUTPATH CUTCOPY
 
 
 # Makefile recursion
@@ -86,19 +85,14 @@ genmk:
 	$(call make_subdirs,genmk)
 clean:
 	rm -f *~
-	rm -f ZUTZCPC
 	$(call make_subdirs,clean)
 
-test:	check-submodules $(ZUTZCPC) genmk
+test:	check-submodules genmk
 	$(call make_builddirs,test)
 
 check-submodules:
 	git submodule init
 	git submodule update
-
-# precompiler for unit-tests
-$(ZUTZCPC): $(CUTPATH)/ZUTZCPC.CBL
-	$(COBC) -x $(COBFLAGS) -o $@ $<
 
 install-gnucobol:
 	$(MAKE) -C gnucobol3 download install
