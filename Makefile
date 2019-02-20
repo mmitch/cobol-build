@@ -9,7 +9,7 @@ export GNUCOBOL_SRC
 
 # what to build
 #
-PROJECTROOT := examples
+PROJECTROOT ?= examples
 
 
 # per project subdirectories
