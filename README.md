@@ -3,29 +3,61 @@ cobol-travis
 
 [![Build Status](https://travis-ci.org/mmitch/cobol-travis.svg?branch=master)](https://travis-ci.org/mmitch/cobol-travis)
 
-This repository contains a template for a COBOL development
-environment with the following features:
+This repository contains a COBOL build system for use with
+[GnuCOBOL](https://savannah.gnu.org/projects/gnucobol) under Linux.
+Main features are:
 
-- basic Makefiles with `build`, `test` and `clean` targets
+- Makefiles with `build`, `test` and `clean` targets
 - [Cobol unit testing framework](https://github.com/neopragma/cobol-unit-test)
   included
 - ready-to-use [TravisCI integration](https://travis-ci.org)
+- easy to integrate into your project
+
+
+how to install
+--------------
+
+1. Add _cobol-travis_ to your project:
+
+   - If you have a git based project, add _cobol-travis_ as a
+     submodule to your existing repository:
+	 - `git submodule add git@github.com:mmitch/cobol-travis.git`
+	 - `git commit`
+	 - add an extra parameter to `git submodule add` to check out to a
+       different directory
+
+   - Otherwise just download _cobol-travis_ and put it in a
+     subdirectory in your project.
+
+2. Copy `template/Makefile` to the root directory of your project
+   and edit it to your needs.  Most important are the variables
+   `BUILDROOT` and `PROJECTROOT`.
+
+3. Structure your COBOL source code in the predefined directory
+   layout (see `PROJECTROOT` or _build projects_ below).
+
+4. Write a `build.txt` for your project(s), see _build.txt_ below.
+
+5. If you want [TravisCI integration](https://travis-ci.org), copy
+   `template/.travis.yml` to the root directory of your project and
+   replace `<BUILDROOT>` by the directory of _cobol-travis_.
 
 
 how to use
 ----------
- 
-1. clone or fork this repository
-2. put your code in `cobol/$PROJECT/src`
-   - use `*.cbl` or `*.cob` as extension
-   - `$PROJECT` will be the name of the generated executable
-   - multiple source files will be combined into the executable, but
-     the tests currently only run correctly with a single source file
-3. put your tests in `cobol/$PROJECT/test`
-   - use `*.cbl` or `*.cob` as extension
-4. remove the demo project at `cobol/helloworld`
-5. update this `README.md`
-   - at least switch the build status button to _your_ repository
+
+Run `make build`, `make test` or `make clean` as needed ;-)
+
+
+how to update
+-------------
+
+If you use a git submodule, do `git submodule update cobol-travis` (or
+whatever you named the directory for _cobol-travis_).
+
+Otherwise just delete the existing _cobol-travis_ directory,
+download a newer version and install it into a subdirectory just as on
+original installation.
 
 
 dependencies
@@ -38,6 +70,11 @@ if they are not already installed.
 
 You need a recent version of [GnuCOBOL](https://savannah.gnu.org/projects/gnucobol).
 Debian/Ubuntu users could try `apt install open-cobol`.
+
+/cobol-travis/ has mostly been tested on GnuCOBOL 3.0.0-rc1.  Older
+versions should work for the easy cases (eg. static compiles), but
+more complicated things (eg. dynamic modules) might fail because of
+different compiler options.
 
 If your version is too old or you want to build GnuCOBOL from source,
 you can run `sudo make install-gnucobol`.  This will install
@@ -115,6 +152,10 @@ removed on `make clean`:
      +-- module 1
      `-- module ...
 ```
+
+
+`build.txt`
+-----------
 
 The file `build.txt` tells the build system what to build.  It is a
 line based text file that ignores empty lines.  Comments are
