@@ -73,7 +73,7 @@ write_test()
     echo "	cp \$(SOURCEDIR)/$TEST \$(TESTRUNDIR)/SRCPRG"
     for SOURCE in "$@"; do
 	echo "	cp \$(TESTDIR)/$SOURCE \$(TESTRUNDIR)/UTESTS"
-	echo "	cd \$(TESTRUNDIR) && ../../../ZUTZCPC"
+	echo "	cd \$(TESTRUNDIR) && \$(ZUTZCPC)"
 	echo "	\$(COBC) -x \$(COBFLAGS) -I \$(CUTCOPY) -o \$(TESTRUNDIR)/unittest \$(TESTRUNDIR)/TESTPRG"
 	[ "$HAVE_TPUT" ] && echo '	@tput bold;tput setaf 3'
 	echo "	cd \$(TESTRUNDIR) && ./unittest"
@@ -96,7 +96,7 @@ write_test_with_driver()
     for SOURCE in "$@"; do
 	MODULE="${TEST%.*}.so"
 	echo "	cp \$(TESTDIR)/$SOURCE \$(TESTRUNDIR)/UTESTS"
-	echo "	cd \$(TESTRUNDIR) && ../../../ZUTZCPC"
+	echo "	cd \$(TESTRUNDIR) && \$(ZUTZCPC)"
 	echo "	\$(COBC) -b \$(COBFLAGS) -I \$(CUTCOPY) -o \$(TESTRUNDIR)/$MODULE \$(TESTRUNDIR)/TESTPRG"
 	[ "$HAVE_TPUT" ] && echo '	@tput bold;tput setaf 3'
 	echo "	cd \$(TESTRUNDIR) && ./driver"
@@ -206,5 +206,4 @@ echo
 echo
 
 echo 'prepare-test:'
-echo '	mkdir -p $(TESTRUNDIR)'
 echo '	echo ZUTZCWS > $(TESTRUNDIR)/UTSTCFG'

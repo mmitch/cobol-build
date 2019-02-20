@@ -1,18 +1,18 @@
-# targets for project subdirectories
-# calles from one directory above
+# COBOL build system Makefile for individual projects
 
-.PHONY: genmk clean test
+MAKEFILE := $(BUILDDIR)/Makefile
 
-MAKEFILE   := $(BUILDDIR)/Makefile
+.PHONY: genmk create-dirs clean
 
 genmk: create-dirs $(MAKEFILE)
 
 create-dirs:
 	mkdir -p $(BUILDDIR)
+	mkdir -p $(TESTRUNDIR)
 	mkdir -p $(TARGETDIR)
 
-$(MAKEFILE): build.txt ../genmk.sh
-	../genmk.sh $@ < $<
+$(MAKEFILE): build.txt $(GENMK)
+	$(GENMK) $@ < $<
 
 clean:
 	rm -rf $(BUILDDIR)
