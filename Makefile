@@ -1,45 +1,57 @@
-# GNUCOBOL installation
+# COBOL build system main Makefile
 
+# GNUCOBOL installation
+#
 GNUCOBOL_SRC := http://gnu.c3sl.ufpr.br/alpha/gnucobol/gnucobol-3.0-rc1.tar.xz
 
 export GNUCOBOL_SRC
 
-# build system directories
 
-BUILDROOT  := cobol
+# what to build
+#
+PROJECTROOT := examples
+
+
+# per project subdirectories
+#
 SOURCEDIR  := src/main/cobol
 COPYDIR    := src/main/cobol/copy
 TESTDIR    := src/test/cobol
-BUILDDIR   := build/main/
-TESTRUNDIR := build/test/
+BUILDDIR   := build/main
+TESTRUNDIR := build/test
 TARGETDIR  := target
 
-export SOURCEDIR COPYDIR BUILDDIR TARGETDIR TESTDIR TESTRUNDIR
+export SOURCEDIR COPYDIR TESTDIR BUILDDIR TESTRUNDIR TARGETDIR
+
 
 # COBOL compiler and flags
-
+#
 COBC     ?= cobc
 COBFLAGS ?= --std=ibm -I $(COPYDIR)
 
 export COBC COBFLAGS
 
-# COBOL Unit Test Framework
 
+# COBOL Unit Test Framework
+#
 CUTPATH := cobol-unit-test/src/main/cobol
 CUTCOPY := $(abspath $(CUTPATH)/copy)
 ZUTZCPC := $(abspath ZUTZCPC)
 
 export CUTCOPY ZUTZCPC
 
-# Makefile recursion
 
-RECIPES     := $(wildcard $(BUILDROOT)/*/build.txt)
-MAKEFILES   := $(RECIPES:/build.txt=/build/Makefile)
-SUBDIRS     := $(RECIPES:/build.txt=)
+# Makefile recursion
+#
 SUBMAKEFILE := $(abspath Makefile.sub)
 GENMK       := $(abspath genmk.sh)
+GENMAKEFILE := build/Makefile
 
-export GENMK
+RECIPES     := $(wildcard $(PROJECTROOT)/*/build.txt)
+MAKEFILES   := $(RECIPES:/build.txt=/$(GENMAKEFILE))
+SUBDIRS     := $(RECIPES:/build.txt=)
+
+export GENMK GENMAKEFILE
 
 define make_subdirs
 	for SUBDIR in $(SUBDIRS); do \
@@ -49,15 +61,23 @@ endef
 
 define make_builddirs
 	for SUBDIR in $(SUBDIRS); do \
-		$(MAKE) -C $$SUBDIR/ -f $(BUILDDIR)/Makefile $(1) || exit; \
+		$(MAKE) -C $$SUBDIR/ -f $(GENMAKEFILE) $(1) || exit; \
 	done
 endef
 
-# targets
 
+# targets
+#
 .PHONY: all build genmk clean test install-cobol
 
-all: build test
+all: dump build test
+
+dump:
+	@echo $(RECIPES)
+	@echo $(MAKEFILES)
+	@echo $(SUBDIRS)
+	@echo $(SUBMAKEFILE)
+	@echo $(GENMK)
 
 build: genmk
 	$(call make_builddirs,build)
@@ -69,7 +89,7 @@ clean:
 	rm -f ZUTZCPC
 	$(call make_subdirs,clean)
 
-test:	check-submodules ZUTZCPC genmk
+test:	check-submodules $(ZUTZCPC) genmk
 	$(call make_builddirs,test)
 
 check-submodules:

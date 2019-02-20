@@ -1,6 +1,5 @@
 *~
 gnucobol3/latest/
-cobol/ZUTZCPC
-cobol/*/target/
-cobol/*/build/
-cobol/*/test-run/
+examples/ZUTZCPC
+examples/*/target/
+examples/*/build/
