@@ -87,7 +87,7 @@ clean:
 	rm -f *~
 	$(call make_subdirs,clean)
 
-test:	check-submodules genmk
+test:	build check-submodules genmk
 	$(call make_builddirs,test)
 
 check-submodules:
