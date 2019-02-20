@@ -1,7 +1,7 @@
-cobol-travis
-============
+cobol-build
+===========
 
-[![Build Status](https://travis-ci.org/mmitch/cobol-travis.svg?branch=master)](https://travis-ci.org/mmitch/cobol-travis)
+[![Build Status](https://travis-ci.org/mmitch/cobol-build.svg?branch=master)](https://travis-ci.org/mmitch/cobol-build)
 
 This repository contains a COBOL build system for use with
 [GnuCOBOL](https://savannah.gnu.org/projects/gnucobol) under Linux.
@@ -17,16 +17,16 @@ Main features are:
 how to install
 --------------
 
-1. Add _cobol-travis_ to your project:
+1. Add _cobol-build_ to your project:
 
-   - If you have a git based project, add _cobol-travis_ as a
+   - If you have a git based project, add _cobol-build_ as a
      submodule to your existing repository:
-	 - `git submodule add git@github.com:mmitch/cobol-travis.git`
+	 - `git submodule add git@github.com:mmitch/cobol-build.git`
 	 - `git commit`
 	 - add an extra parameter to `git submodule add` to check out to a
        different directory
 
-   - Otherwise just download _cobol-travis_ and put it in a
+   - Otherwise just download _cobol-build_ and put it in a
      subdirectory in your project.
 
 2. Copy `template/Makefile` to the root directory of your project
@@ -40,7 +40,7 @@ how to install
 
 5. If you want [TravisCI integration](https://travis-ci.org), copy
    `template/.travis.yml` to the root directory of your project and
-   replace `<BUILDROOT>` by the directory of _cobol-travis_.
+   replace `<BUILDROOT>` by the directory of _cobol-build_.
 
 
 how to use
@@ -52,10 +52,10 @@ Run `make build`, `make test` or `make clean` as needed ;-)
 how to update
 -------------
 
-If you use a git submodule, do `git submodule update cobol-travis` (or
-whatever you named the directory for _cobol-travis_).
+If you use a git submodule, do `git submodule update cobol-build` (or
+whatever you named the directory for _cobol-build_).
 
-Otherwise just delete the existing _cobol-travis_ directory,
+Otherwise just delete the existing _cobol-build_ directory,
 download a newer version and install it into a subdirectory just as on
 original installation.
 
@@ -71,7 +71,7 @@ if they are not already installed.
 You need a recent version of [GnuCOBOL](https://savannah.gnu.org/projects/gnucobol).
 Debian/Ubuntu users could try `apt install open-cobol`.
 
-/cobol-travis/ has mostly been tested on GnuCOBOL 3.0.0-rc1.  Older
+_cobol-build_ has mostly been tested on GnuCOBOL 3.0.0-rc1.  Older
 versions should work for the easy cases (eg. static compiles), but
 more complicated things (eg. dynamic modules) might fail because of
 different compiler options.

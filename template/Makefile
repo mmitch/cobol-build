@@ -7,14 +7,14 @@
 # Position of the COBOL build system root directory relative to the
 # root directory of your project.
 #
-# BUILDROOT is the directory where you put cobol-travis, either the
+# BUILDROOT is the directory where you put cobol-build, either the
 # git submodule or the manual download.
 
-export BUILDROOT=cobol-travis
+export BUILDROOT=cobol-build
 
 
 
-# Position of the project root directory *relative* to the COBOL build system root.
+# Position of the project root directory relative to the COBOL build system root.
 #
 # Your PROJECTROOT must have one or more subdirectories that adhere to
 # this directory layout:
