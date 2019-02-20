@@ -1,8 +1,8 @@
 # COBOL build system main Makefile
 
-# GNUCOBOL installation
+# GnuCOBOL installation
 #
-GNUCOBOL_SRC := http://gnu.c3sl.ufpr.br/alpha/gnucobol/gnucobol-3.0-rc1.tar.xz
+GNUCOBOL_SRC ?= http://gnu.c3sl.ufpr.br/alpha/gnucobol/gnucobol-3.0-rc1.tar.xz
 
 export GNUCOBOL_SRC
 
