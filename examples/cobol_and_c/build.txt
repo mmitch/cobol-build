@@ -1,1 +1,1 @@
-BUILD BINARY helloworld_cobol USING helloworld.cbl hello.c world.cbl
+BUILD EXECUTABLE helloworld_cobol USING helloworld.cbl hello.c world.cbl

@@ -1,6 +1,6 @@
 # this is a comment
 # comments and empty lines are ignored
 
-BUILD BINARY helloworld USING helloworld.cbl
+BUILD EXECUTABLE helloworld USING helloworld.cbl
 
 TEST SOURCE helloworld.cbl USING addition.cbl

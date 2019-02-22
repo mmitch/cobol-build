@@ -163,22 +163,22 @@ prefixed with `#`.
 
 Available commands are:
 
-### `BUILD BINARY` statement
+### `BUILD EXECUTABLE` statement
 
-The `BUILD BINARY` statement builds an executable program
+The `BUILD EXECUTABLE` statement builds an executable program
 from one or multiple source files.
 
 ```
 |-- Format -----------------------------------------------------------
 |                                                                    |
-|                                      <-------------                |
-| >>--BUILD BINARY--binary-name--USING--source-file-|------------->< |
+|                                              <-------------        |
+| >>--BUILD EXECUTABLE--executable-name--USING--source-file-|----->< |
 |                                                                    |
 |---------------------------------------------------------------------
 ```
 
-* `binary-name` is the name of the generated binary without any extension.
-  It will be put into the `target/` directory.
+* `executable-name` is the name of the generated executable binary
+  without any extension.  It will be put into the `target/` directory.
  
 
 * `source-file` is the name (including the extension) of a source file.

@@ -22,7 +22,7 @@ parse_build()
 
     case "${TYPE^^}" in
 
-	BINARY)
+	EXECUTABLE)
 	    TARGET="$1"
 	    LINKFLAG=-x
 	    ;;
@@ -58,7 +58,7 @@ parse_build()
     echo
     TARGETS[$TARGET]="$*"
 
-    if [ "$TYPE" = BINARY ]; then
+    if [ "$TYPE" = EXECUTABLE ]; then
 	# main program needs both -c and -x, otherwise <undefined reference to `main'>
 	OBJECTFLAGS[$FIRSTOBJECT]="-x"
     fi
