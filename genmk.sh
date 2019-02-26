@@ -4,15 +4,23 @@ HAVE_TPUT="$(command -v tput || true)"
 
 abend()
 {
-    MESSAGE="$*"
+    local MESSAGE="$*"
     exec 1>&2
     [ "$HAVE_TPUT" ] && tput setaf 1 && tput bold
-    echo "$0: ${MESSAGE:-'unkown error'}"
+    echo "[$SUBDIR:$(basename "$0")] ${MESSAGE:-'unkown error'}"
     [ "$HAVE_TPUT" ] && tput sgr0
 
     [ "$OUTPUT" != '-stdout' ] && rm "$OUTPUT"
 	
     exit 1
+}
+
+ensure_file_exists()
+{
+    local FILE="$1" TYPE="$2"
+
+    [ -e "$FILE" ] || abend "$TYPE \`$FILE' referenced in \`$LINE' does not exist"
+    [ -r "$FILE" ] || abend "$TYPE \`$FILE' referenced in \`$LINE' is not readable"
 }
 
 parse_build()
@@ -45,6 +53,8 @@ parse_build()
     echo -n "\$(TARGETDIR)/$TARGET:"
     FIRSTOBJECT=""
     for SOURCE in "$@"; do
+	ensure_file_exists "$SOURCEDIR/$SOURCE" SOURCE-FILE
+
 	OBJECT="\$(BUILDDIR)/${SOURCE%.*}.o"
 	OBJECTS[$OBJECT]="$SOURCE"
 	echo -n " $OBJECT"
@@ -72,6 +82,8 @@ write_test()
     echo "\$(TESTRUNDIR)/$TEST:"
     echo "	cp \$(SOURCEDIR)/$TEST \$(TESTRUNDIR)/SRCPRG"
     for SOURCE in "$@"; do
+	ensure_file_exists "$TESTDIR/$SOURCE" TEST-SOURCE
+
 	echo "	cp \$(TESTDIR)/$SOURCE \$(TESTRUNDIR)/UTESTS"
 	echo "	cd \$(TESTRUNDIR) && ./ZUTZCPC"
 	echo "	\$(COBC) -x \$(COBFLAGS) -I \$(CUTCOPY) -o \$(TESTRUNDIR)/unittest \$(TESTRUNDIR)/TESTPRG"
@@ -94,6 +106,8 @@ write_test_with_driver()
     echo "	\$(COBC) -x \$(COBFLAGS) -o \$(TESTRUNDIR)/driver \$(TESTDIR)/$DRIVER"
     echo "	cp \$(SOURCEDIR)/$TEST \$(TESTRUNDIR)/SRCPRG"
     for SOURCE in "$@"; do
+	ensure_file_exists "$TESTDIR/$SOURCE" TEST-SOURCE
+
 	MODULE="${TEST%.*}.so"
 	echo "	cp \$(TESTDIR)/$SOURCE \$(TESTRUNDIR)/UTESTS"
 	echo "	cd \$(TESTRUNDIR) && ./ZUTZCPC"
@@ -118,6 +132,8 @@ parse_test()
     if [ "${1^^}" = WITH ] && [ "${2^^}" = DRIVER ]; then
 	DRIVER="$3"
 	shift 3
+
+	ensure_file_exists "$TESTDIR/$DRIVER" DRIVER
     else
 	DRIVER=
     fi

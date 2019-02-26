@@ -54,7 +54,7 @@ export GENMK GENMAKEFILE
 
 define make_subdirs
 	for SUBDIR in $(SUBDIRS); do \
-		$(MAKE) -C $$SUBDIR -f $(SUBMAKEFILE) $(1) || exit; \
+		SUBDIR=$$SUBDIR $(MAKE) -C $$SUBDIR -f $(SUBMAKEFILE) $(1) || exit; \
 	done
 endef
 
