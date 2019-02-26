@@ -102,7 +102,7 @@ write_test_with_driver()
     DRIVER="$2"
     shift 2
 
-    echo "\$(TESTRUNDIR)/$TEST:"
+    echo "\$(TESTRUNDIR)/$TEST: \$(COPYBOOKS)"
     echo "	\$(COBC) -x \$(COBFLAGS) -o \$(TESTRUNDIR)/driver \$(TESTDIR)/$DRIVER"
     echo "	cp \$(SOURCEDIR)/$TEST \$(TESTRUNDIR)/SRCPRG"
     for SOURCE in "$@"; do
@@ -164,8 +164,19 @@ else
     OUTPUT="-stdout"
 fi
 
-echo ".PHONY: build test prepare-test"
-echo
+cat <<'EOF'
+COPYBOOKS := $(BUILDBASE)/copybook.timestamp
+
+.PHONY: build test prepare-test
+
+update-copybooks:
+	if [ -d $(COPYDIR) ]; then \
+	    touch -r "$$(find -L $(COPYDIR) build.txt -type f -printf "%T@ %p\n" | sort -rn | head -1 | (read -r TIME FILE; echo $$FILE))" $(COPYBOOKS); \
+	else \
+	    touch -r build.txt $(COPYBOOKS); \
+	fi
+
+EOF
 
 declare -A TARGETS OBJECTS OBJECTFLAGS TESTS
 
@@ -202,27 +213,29 @@ done
 for OBJECT in ${!OBJECTS[*]}; do
     SOURCE="${OBJECTS[$OBJECT]}"
     EXTRAFLAGS="${OBJECTFLAGS[$OBJECT]}"
-    echo "$OBJECT: \$(SOURCEDIR)/$SOURCE"
+    echo "$OBJECT: \$(SOURCEDIR)/$SOURCE \$(COPYBOOKS)"
     echo "	\$(COBC) -c $EXTRAFLAGS \$(COBFLAGS) -o \$@ \$<"
     echo
 done
 
-echo -n "build:"
+echo -n "build: update-copybooks"
 for TARGET in ${!TARGETS[*]}; do
     echo -n " \$(TARGETDIR)/$TARGET"
 done
 echo
 echo
 
-echo -n "test: prepare-test"
+echo -n "test: build prepare-test"
 for TEST in ${!TESTS[*]}; do
     echo -n " \$(TESTRUNDIR)/$TEST"
 done
 echo
 echo
 
-echo 'prepare-test: $(TESTRUNDIR)/ZUTZCPC'
-echo '	echo ZUTZCWS > $(TESTRUNDIR)/UTSTCFG'
-echo
-echo '$(TESTRUNDIR)/ZUTZCPC: $(CUTPATH)/ZUTZCPC.CBL'
-echo '	$(COBC) -x $(COBFLAGS) -o $@ $<'
+cat <<'EOF'
+prepare-test: $(TESTRUNDIR)/ZUTZCPC
+	echo ZUTZCWS > $(TESTRUNDIR)/UTSTCFG
+
+$(TESTRUNDIR)/ZUTZCPC: $(CUTPATH)/ZUTZCPC.CBL
+	$(COBC) -x $(COBFLAGS) -o $@ $<
+EOF
