@@ -6,18 +6,32 @@
 
 genmk: create-dirs $(GENMAKEFILE)
 
-create-dirs:
-	mkdir -p $(BUILDDIR)
-	mkdir -p $(TESTRUNDIR)
-	mkdir -p $(TARGETDIR)
+create-dirs: $(BUILDDIR) $(TESTRUNDIR) $(TARGETDIR)
+
+$(BUILDDIR):
+	@echo [MKDIR] $(SUBDIR)/$@
+	mkdir -p $@
+
+$(TESTRUNDIR):
+	@echo [MKDIR] $(SUBDIR)/$@
+	mkdir -p $@
+
+$(TARGETDIR):
+	@echo [MKDIR] $(SUBDIR)/$@
+	mkdir -p $@
 
 $(GENMAKEFILE): build.txt $(GENMK)
-	$(GENMK) $@ < $<
+	@echo [GENMK] $(SUBDIR)/$@
+	$(Q)$(GENMK) $@ < $<
 
 clean:
+	@echo [CLEAN] $(SUBDIR)/$(BUILDBASE)
 	rm -rf $(BUILDBASE)
+	@echo [CLEAN] $(SUBDIR)/$(TARGETDIR)
 	rm -rf $(TARGETDIR)
+	@echo [CLEAN] $(SUBDIR)/$(SOURCEDIR)
 	rm -f $(SOURCEDIR)/*~
+	@echo [CLEAN] $(SUBDIR)/$(COPYDIR)
 	rm -f $(COPYDIR)/*~
+	@echo [CLEAN] $(SUBDIR)
 	rm -f *~
-	rm -f test/*~

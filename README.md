@@ -51,6 +51,10 @@ how to use
 
 Run `make build`, `make test` or `make clean` as needed ;-)
 
+The output of `make` is stripped down to be easier to read.  If you
+run into an error or want to see what is really going on, run `make`
+with the parameter `V=1`, eg. `make build V=1`.
+
 
 how to update
 -------------

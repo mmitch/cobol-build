@@ -64,7 +64,8 @@ parse_build()
 	fi
     done
     echo
-    echo "	\$(COBC) $LINKFLAG \$(COBFLAGS) -o \$@ \$^"
+    echo "	@echo [LINK] \$(SUBDIR)/\$@"
+    echo "	\$(Q)\$(COBC) $LINKFLAG \$(COBFLAGS) -o \$@ \$^"
     echo
     TARGETS[$TARGET]="$*"
 
@@ -80,15 +81,18 @@ write_test()
     shift
 
     echo "\$(TESTRUNDIR)/$TEST:"
-    echo "	cp \$(SOURCEDIR)/$TEST \$(TESTRUNDIR)/SRCPRG"
+    echo "	\$(Q)cp \$(SOURCEDIR)/$TEST \$(TESTRUNDIR)/SRCPRG"
     for SOURCE in "$@"; do
 	ensure_file_exists "$TESTDIR/$SOURCE" TEST-SOURCE
 
-	echo "	cp \$(TESTDIR)/$SOURCE \$(TESTRUNDIR)/UTESTS"
-	echo "	cd \$(TESTRUNDIR) && ./ZUTZCPC"
-	echo "	\$(COBC) -x \$(COBFLAGS) -I \$(CUTCOPY) -o \$(TESTRUNDIR)/unittest \$(TESTRUNDIR)/TESTPRG"
+	echo "	\$(Q)cp \$(TESTDIR)/$SOURCE \$(TESTRUNDIR)/UTESTS"
+	echo "	@echo '[ZUTZCPC]  ' \$(SUBDIR)/\$@"
+	echo "	\$(Q)cd \$(TESTRUNDIR) && ./ZUTZCPC"
+	echo "	@echo '[COBC,LINK]' \$(SUBDIR)/\$@"
+	echo "	\$(Q)\$(COBC) -x \$(COBFLAGS) -I \$(CUTCOPY) -o \$(TESTRUNDIR)/unittest \$(TESTRUNDIR)/TESTPRG"
+	echo "	@echo '[TEST]     ' \$(SUBDIR)/\$@"
 	[ "$HAVE_TPUT" ] && echo '	@tput bold;tput setaf 3'
-	echo "	cd \$(TESTRUNDIR) && ./unittest"
+	echo "	\$(Q)cd \$(TESTRUNDIR) && ./unittest"
 	[ "$HAVE_TPUT" ] && echo '	@tput sgr0'
     done
     echo
@@ -103,17 +107,21 @@ write_test_with_driver()
     shift 2
 
     echo "\$(TESTRUNDIR)/$TEST: \$(COPYBOOKS)"
-    echo "	\$(COBC) -x \$(COBFLAGS) -o \$(TESTRUNDIR)/driver \$(TESTDIR)/$DRIVER"
-    echo "	cp \$(SOURCEDIR)/$TEST \$(TESTRUNDIR)/SRCPRG"
+    echo "	@echo [COBC,LINK] \$(SUBDIR)/\$(TESTDIR)/$DRIVER"
+    echo "	\$(Q)\$(COBC) -x \$(COBFLAGS) -o \$(TESTRUNDIR)/driver \$(TESTDIR)/$DRIVER"
+    echo "	\$(Q)cp \$(SOURCEDIR)/$TEST \$(TESTRUNDIR)/SRCPRG"
     for SOURCE in "$@"; do
 	ensure_file_exists "$TESTDIR/$SOURCE" TEST-SOURCE
 
 	MODULE="${TEST%.*}.so"
-	echo "	cp \$(TESTDIR)/$SOURCE \$(TESTRUNDIR)/UTESTS"
-	echo "	cd \$(TESTRUNDIR) && ./ZUTZCPC"
-	echo "	\$(COBC) -b \$(COBFLAGS) -I \$(CUTCOPY) -o \$(TESTRUNDIR)/$MODULE \$(TESTRUNDIR)/TESTPRG"
+	echo "	\$(Q)cp \$(TESTDIR)/$SOURCE \$(TESTRUNDIR)/UTESTS"
+	echo "	@echo '[ZUTZCPC]  ' \$(SUBDIR)/\$@"
+	echo "	\$(Q)cd \$(TESTRUNDIR) && ./ZUTZCPC"
+	echo "	@echo '[COBC,LINK]' \$(SUBDIR)/\$@"
+	echo "	\$(Q)\$(COBC) -b \$(COBFLAGS) -I \$(CUTCOPY) -o \$(TESTRUNDIR)/$MODULE \$(TESTRUNDIR)/TESTPRG"
+	echo "	@echo '[TEST]     ' \$(SUBDIR)/\$@"
 	[ "$HAVE_TPUT" ] && echo '	@tput bold;tput setaf 3'
-	echo "	cd \$(TESTRUNDIR) && ./driver"
+	echo "	\$(Q)cd \$(TESTRUNDIR) && ./driver"
 	[ "$HAVE_TPUT" ] && echo '	@tput sgr0'
     done
     echo
@@ -170,7 +178,7 @@ COPYBOOKS := $(BUILDBASE)/copybook.timestamp
 .PHONY: build test prepare-test
 
 update-copybooks:
-	if [ -d $(COPYDIR) ]; then \
+	$(Q)if [ -d $(COPYDIR) ]; then \
 	    touch -r "$$(find -L $(COPYDIR) build.txt -type f -printf "%T@ %p\n" | sort -rn | head -1 | (read -r TIME FILE; echo $$FILE))" $(COPYBOOKS); \
 	else \
 	    touch -r build.txt $(COPYBOOKS); \
@@ -217,7 +225,8 @@ for OBJECT in ${!OBJECTS[*]}; do
     SOURCE="${OBJECTS[$OBJECT]}"
     EXTRAFLAGS="${OBJECTFLAGS[$OBJECT]}"
     echo "$OBJECT: \$(SOURCEDIR)/$SOURCE \$(COPYBOOKS)"
-    echo "	\$(COBC) -c $EXTRAFLAGS \$(COBFLAGS) -o \$@ \$<"
+    echo "	@echo [COBC] \$(SUBDIR)/\$<"
+    echo "	\$(Q)\$(COBC) -c $EXTRAFLAGS \$(COBFLAGS) -o \$@ \$<"
     echo
 done
 
@@ -237,8 +246,9 @@ echo
 
 cat <<'EOF'
 prepare-test: $(TESTRUNDIR)/ZUTZCPC
-	echo ZUTZCWS > $(TESTRUNDIR)/UTSTCFG
+	$(Q)echo ZUTZCWS > $(TESTRUNDIR)/UTSTCFG
 
 $(TESTRUNDIR)/ZUTZCPC: $(CUTPATH)/ZUTZCPC.CBL
-	$(COBC) -x $(COBFLAGS) -o $@ $<
+	@echo [COBC] $(SUBDIR)/$@
+	$(Q)$(COBC) -x $(COBFLAGS) -o $@ $<
 EOF
