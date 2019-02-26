@@ -70,14 +70,7 @@ endef
 #
 .PHONY: all build genmk clean test install-cobol
 
-all: dump build test
-
-dump:
-	@echo $(RECIPES)
-	@echo $(MAKEFILES)
-	@echo $(SUBDIRS)
-	@echo $(SUBMAKEFILE)
-	@echo $(GENMK)
+all: build test
 
 build: genmk
 	$(call make_builddirs,build)
