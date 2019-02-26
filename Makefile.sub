@@ -15,9 +15,8 @@ $(GENMAKEFILE): build.txt $(GENMK)
 	$(GENMK) $@ < $<
 
 clean:
-	rm -rf $(BUILDDIR)
+	rm -rf $(BUILDBASE)
 	rm -rf $(TARGETDIR)
-	rm -rf $(TESTRUNDIR)
 	rm -f $(SOURCEDIR)/*~
 	rm -f $(COPYDIR)/*~
 	rm -f *~

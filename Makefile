@@ -17,11 +17,12 @@ PROJECTROOT ?= examples
 SOURCEDIR  := src/main/cobol
 COPYDIR    := src/main/cobol/copy
 TESTDIR    := src/test/cobol
+BUILDBASE  := build
 BUILDDIR   := build/main
 TESTRUNDIR := build/test
 TARGETDIR  := target
 
-export SOURCEDIR COPYDIR TESTDIR BUILDDIR TESTRUNDIR TARGETDIR
+export SOURCEDIR COPYDIR TESTDIR BUILDBASE BUILDDIR TESTRUNDIR TARGETDIR
 
 
 # COBOL compiler and flags
