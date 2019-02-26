@@ -185,6 +185,9 @@ while IFS= read -r LINE; do
     # remove comments
     LINE="${LINE%%#*}"
 
+    # remove CRLF if from windows
+    LINE="${LINE%$'\r'}"
+
     # skip empty lines
     [[ $LINE =~ ^[[:space:]]*$ ]] && continue
 
