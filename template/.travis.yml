@@ -8,7 +8,7 @@ addons:
       - libncurses5-dev
 
 before_install:
-  - sudo make -C <BUILDROOT> install-gnucobol
+  - sudo make -C cobol-build install-gnucobol
 
 install:
   - make build
@@ -18,7 +18,7 @@ script:
 
 cache:
   directories:
-    - <BUILDROOT>/gnucobol3/latest
+    - cobol-build/gnucobol3/latest
 
 git:
   depth: false

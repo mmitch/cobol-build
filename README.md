@@ -39,8 +39,11 @@ how to install
 4. Write a `build.txt` for your project(s), see _build.txt_ below.
 
 5. If you want [TravisCI integration](https://travis-ci.org), copy
-   `template/.travis.yml` to the root directory of your project and
-   replace `<BUILDROOT>` by the directory of _cobol-build_.
+   `template/.travis.yml` to the root directory of your project.
+
+   - If you put _cobol-build_ in a directory _not_ named
+     `cobol-build`, you need change all instances of `cobol-build` in
+     `.travis.yml` to that directory.
 
 
 how to use
