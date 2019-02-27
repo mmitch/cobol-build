@@ -175,7 +175,7 @@ fi
 cat <<'EOF'
 COPYBOOKS := $(BUILDBASE)/copybook.timestamp
 
-.PHONY: build test prepare-test
+.PHONY: build test update-copybooks prepare-test
 
 update-copybooks:
 	$(Q)if [ -d $(COPYDIR) ]; then \
