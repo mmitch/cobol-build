@@ -101,7 +101,7 @@ clean:
 	$(Q)rm -f *~
 	$(call make_subdirs,clean)
 
-test:	build check-submodules genmk
+test:	build check-submodules
 	$(call make_builddirs,test)
 
 check-submodules:
