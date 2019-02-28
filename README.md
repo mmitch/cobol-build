@@ -63,8 +63,8 @@ needs `inotifywait` from the /inotify tools/.
 how to update
 -------------
 
-If you use a git submodule, do `git submodule update cobol-build` (or
-whatever you named the directory for _cobol-build_).
+If you use a git submodule, do `git submodule update --remote cobol-build`
+(or whatever you named the directory for _cobol-build_).
 
 Otherwise just delete the existing _cobol-build_ directory,
 download a newer version and install it into a subdirectory just as on
