@@ -104,6 +104,14 @@ clean:
 test:	build check-submodules
 	$(call make_builddirs,test)
 
+autotest:
+	@echo watching for changes...
+	$(Q)inotifywait --monitor --recursive --quiet --event modify --event move --event delete $(PROJECTROOT) \
+		| while read CHANGE; do \
+			bash -c "while read -t 1 SLURP; do : ; done"; \
+			$(MAKE) test; \
+		done
+
 check-submodules:
 	$(Q)git submodule init
 	$(Q)git submodule update

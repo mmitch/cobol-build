@@ -55,6 +55,10 @@ The output of `make` is stripped down to be easier to read.  If you
 run into an error or want to see what is really going on, run `make`
 with the parameter `V=1`, eg. `make build V=1`.
 
+Run `make autotest` to enable continuous testing: If any file in your
+source projects changes, `make test` will be run automatically.  This
+needs `inotifywait` from the /inotify tools/.
+
 
 how to update
 -------------
