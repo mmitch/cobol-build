@@ -57,7 +57,7 @@ with the parameter `V=1`, eg. `make build V=1`.
 
 Run `make autotest` to enable continuous testing: If any file in your
 source projects changes, `make test` will be run automatically.  This
-needs `inotifywait` from the /inotify tools/.
+needs `inotifywait` from the _inotify tools_.
 
 
 how to update
