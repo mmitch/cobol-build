@@ -104,7 +104,7 @@ clean:
 test:	build check-submodules
 	$(call make_builddirs,test)
 
-autotest:
+autotest: test
 	@echo watching for changes...
 	$(Q)inotifywait --monitor --recursive --quiet --event modify --event move --event delete $(PROJECTROOT) \
 		| while read CHANGE; do \
