@@ -75,6 +75,24 @@ parse_build()
     fi
 }
 
+write_test_execution_with()
+{
+    local RUNIT="$1"
+
+    [ "$HAVE_TPUT" ] && echo '	@tput setaf 3'
+    echo "	\$(Q)cd \$(TESTRUNDIR) && if ./${RUNIT}; then \\"
+    [ "$HAVE_TPUT" ] && echo "		tput bold;tput setaf 2; \\"
+    			echo "		echo 'TEST PASS'; \\"
+    			echo "		echo '\$@' >> \$(TESTPASS); \\"
+    [ "$HAVE_TPUT" ] && echo "		tput sgr0; \\"
+    			echo "	else \\"
+    [ "$HAVE_TPUT" ] && echo "		tput bold;tput setaf 1; \\"
+    			echo "		echo 'TEST FAILED'; \\"
+    			echo "		echo '\$@' >> \$(TESTFAIL); \\"
+    [ "$HAVE_TPUT" ] && echo "		tput sgr0; \\"
+    			echo "	fi"
+}
+
 write_test()
 {
     TEST="$1"
@@ -91,9 +109,7 @@ write_test()
 	echo "	@echo '[COBC,LINK]' \$(SUBDIR)/\$@"
 	echo "	\$(Q)\$(COBC) -x \$(COBFLAGS) -I \$(CUTCOPY) -o \$(TESTRUNDIR)/unittest \$(TESTRUNDIR)/TESTPRG"
 	echo "	@echo '[TEST]     ' \$(SUBDIR)/\$@"
-	[ "$HAVE_TPUT" ] && echo '	@tput bold;tput setaf 3'
-	echo "	\$(Q)cd \$(TESTRUNDIR) && ./unittest"
-	[ "$HAVE_TPUT" ] && echo '	@tput sgr0'
+	write_test_execution_with 'unittest'
     done
     echo
 
@@ -119,10 +135,7 @@ write_test_with_driver()
 	echo "	\$(Q)cd \$(TESTRUNDIR) && ./ZUTZCPC"
 	echo "	@echo '[COBC,LINK]' \$(SUBDIR)/\$@"
 	echo "	\$(Q)\$(COBC) -b \$(COBFLAGS) -I \$(CUTCOPY) -o \$(TESTRUNDIR)/$MODULE \$(TESTRUNDIR)/TESTPRG"
-	echo "	@echo '[TEST]     ' \$(SUBDIR)/\$@"
-	[ "$HAVE_TPUT" ] && echo '	@tput bold;tput setaf 3'
-	echo "	\$(Q)cd \$(TESTRUNDIR) && ./driver"
-	[ "$HAVE_TPUT" ] && echo '	@tput sgr0'
+	write_test_execution_with 'driver'
     done
     echo
 

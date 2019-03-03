@@ -70,7 +70,11 @@ RECIPES     := $(wildcard $(PROJECTROOT)/*/build.txt)
 MAKEFILES   := $(RECIPES:/build.txt=/$(GENMAKEFILE))
 SUBDIRS     := $(RECIPES:/build.txt=)
 
-export GENMK GENMAKEFILE
+FIRSTSUBDIR := $(word 1, $(SUBDIRS))
+TESTPASS    := $(abspath $(FIRSTSUBDIR)/build/test-ok)
+TESTFAIL    := $(abspath $(FIRSTSUBDIR)/build/test-fail)
+
+export GENMK GENMAKEFILE TESTPASS TESTFAIL
 
 define make_subdirs
 	$(Q)for SUBDIR in $(SUBDIRS); do \
@@ -87,7 +91,7 @@ endef
 
 # targets
 #
-.PHONY: all build genmk clean test install-cobol
+.PHONY: all build genmk clean test install-cobol init-test-counters
 
 all: build test
 
@@ -101,8 +105,13 @@ clean:
 	$(Q)rm -f *~
 	$(call make_subdirs,clean)
 
-test:	build check-submodules
+test:	build check-submodules init-test-counters
 	$(call make_builddirs,test)
+	@./teststats.sh "$(TESTPASS)" "$(TESTFAIL)"
+
+init-test-counters:
+	$(Q)echo -n > $(TESTPASS)
+	$(Q)echo -n > $(TESTFAIL)
 
 autotest: test
 	@echo
