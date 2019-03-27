@@ -67,7 +67,6 @@ GENMK       := $(abspath genmk.sh)
 GENMAKEFILE := build/Makefile
 
 RECIPES     := $(wildcard $(PROJECTROOT)/*/build.txt)
-MAKEFILES   := $(RECIPES:/build.txt=/$(GENMAKEFILE))
 SUBDIRS     := $(RECIPES:/build.txt=)
 
 FIRSTSUBDIR := $(word 1, $(SUBDIRS))
@@ -119,7 +118,7 @@ autotest: test
 	@echo "watching for changes..."
 	@echo
 	$(Q)while inotifywait --recursive --quiet --quiet --event modify --event move --event delete $(PROJECTROOT); do \
-		$(MAKE) test MAKEFILES=; \
+		$(MAKE) test; \
 		echo ; \
 		echo ; \
 		echo "watching for changes..."; \
