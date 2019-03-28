@@ -88,6 +88,16 @@ define make_builddirs
 endef
 
 
+# pretty print
+#
+
+define print_green
+	-@command -v tput >/dev/null && tput setaf 2 && tput bold
+	-@echo "$(1)"
+	-@command -v tput >/dev/null && tput sgr0
+endef
+
+
 # targets
 #
 .PHONY: all build genmk clean test install-cobol init-test-counters
@@ -96,6 +106,7 @@ all: build test
 
 build: genmk
 	$(call make_builddirs,build)
+	$(call print_green,BUILD OK)
 
 genmk:
 	$(call make_subdirs,genmk)
