@@ -7,11 +7,11 @@ This repository contains a COBOL build system for use with
 [GnuCOBOL](https://savannah.gnu.org/projects/gnucobol) under Linux.
 Main features are:
 
-- Makefiles with `build`, `test` and `clean` targets
-- [Cobol unit testing framework](https://github.com/neopragma/cobol-unit-test)
-  included
-- ready-to-use [TravisCI integration](https://travis-ci.org)
-- easy to integrate into your project
+ - Makefiles with `build`, `test` and `clean` targets
+ - [Cobol unit testing framework](https://github.com/neopragma/cobol-unit-test)
+   included
+ - ready-to-use [TravisCI integration](https://travis-ci.org)
+ - easy to integrate into your project
 
 
 how to install
