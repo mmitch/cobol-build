@@ -71,6 +71,28 @@ download a newer version and install it into a subdirectory just as on
 original installation.
 
 
+a note on filenames
+-------------------
+
+While COBOL is notoriously case-insensitive, Unix/Linux filesystems
+are not, so you must ensure that the case of your filenames matches in
+all places:
+
+ - the names of your files
+ - the filenames given in `build.txt`
+ - your `PROGRAM-ID.`
+ - filenames in `COPY` statements
+ - module names in `CALL` statements
+ 
+If you work with on a case-insensitive filesystem (eg. on Windows),
+you can ignore this, but you will run into problems later when using
+TravisCI (because the build runs on Linux and case matters).
+ 
+Beware: changing the case of a filename under Windows will give you
+some headaches because for the system both filenaes will still be the
+same.
+
+
 dependencies
 ------------
 
