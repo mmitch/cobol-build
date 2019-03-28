@@ -1,3 +1,3 @@
 [submodule "cobol-unit-test"]
 	path = cobol-unit-test
-	url = https://github.com/neopragma/cobol-unit-test.git
+	url = https://github.com/mmitch/cobol-unit-test.git
