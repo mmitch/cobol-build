@@ -159,7 +159,7 @@ parse_test()
 	DRIVER=
     fi
 
-    [ "$1" = USING ] || abend "expected USING, but got: $2"
+    [ "${1^^}" = USING ] || abend "expected USING or WITH DRIVER, but got: $2"
     shift
 
     if [ $DRIVER ]; then
@@ -219,11 +219,11 @@ while IFS= read -r LINE; do
     
     case "${VERB^^}" in
 
-	BUILD|build)
+	BUILD)
 	    parse_build "$@"
 	    ;;
 
-	TEST|test)
+	TEST)
 	    parse_test "$@"
 	    ;;
 	
