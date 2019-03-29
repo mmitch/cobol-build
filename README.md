@@ -36,7 +36,7 @@ how to install
 3. You may also copy `template/.gitignore` to the root directory of
    your project (or add it to your existing `.gitignore`) to exclude
    the `build/` and `target/` subdirectories from git.
-   
+
    - If your `PROJECTROOT` is in a non-standard location, you will
 	 have to edit the paths accordingly.
 
@@ -70,12 +70,31 @@ needs `inotifywait` from the _inotify tools_.
 how to update
 -------------
 
-If you use a git submodule, do `git submodule update --remote cobol-build`
-(or whatever you named the directory for _cobol-build_).
+If you use _cobol-build_ as a git submodule _and_ use the `Makefile`
+template, just run `make update-cobol-build`.  The update will be
+turned into a git commit and you can edit the default commit message
+to your taste.
 
-Otherwise just delete the existing _cobol-build_ directory,
-download a newer version and install it into a subdirectory just as on
-original installation.
+If you use _cobol-build_ as a git submodule but don't use the
+`Makefile` template, you have to do the steps manually:
+
+1. enter your _cobol-build_ directory
+
+2. run `git pull origin master` to update _cobol-build_ to the newest
+   version
+
+3. go back to your project root directory
+
+4. `git commit cobol-build` (or whatever your directory is named) to
+   register your change.
+
+   - note: if you don't `git add` or `git commit` your change, the
+     next call to `make` will revert _cobol-build_ to the version you
+     had before the update
+
+If you don't use _cobol-build_ as a git submodule, just delete the
+existing _cobol-build_ directory, download a newer version and install
+it into a subdirectory like during the original installation.
 
 
 a note on filenames
