@@ -33,12 +33,19 @@ how to install
    and edit it to your needs.  Most important are the variables
    `BUILDROOT` and `PROJECTROOT`.
 
-3. Structure your COBOL source code in the predefined directory
+3. You may also copy `template/.gitignore` to the root directory of
+   your project (or add it to your existing `.gitignore`) to exclude
+   the `build/` and `target/` subdirectories from git.
+   
+   - If your `PROJECTROOT` is in a non-standard location, you will
+	 have to edit the paths accordingly.
+
+4. Structure your COBOL source code in the predefined directory
    layout (see `PROJECTROOT` or _build projects_ below).
 
-4. Write a `build.txt` for your project(s), see _build.txt_ below.
+5. Write a `build.txt` for your project(s), see _build.txt_ below.
 
-5. If you want [TravisCI integration](https://travis-ci.org), copy
+6. If you want [TravisCI integration](https://travis-ci.org), copy
    `template/.travis.yml` to the root directory of your project.
 
    - If you put _cobol-build_ in a directory _not_ named
