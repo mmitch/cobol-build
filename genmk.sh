@@ -2,6 +2,12 @@
 
 HAVE_TPUT="$(command -v tput || true)"
 
+echo_tput()
+{
+    [ "$HAVE_TPUT" ] || return 0
+    echo "$*"
+}
+
 abend()
 {
     local MESSAGE="$*"
@@ -103,24 +109,6 @@ parse_build()
     fi
 }
 
-write_test_execution_with()
-{
-    local RUNIT="$1"
-
-    [ "$HAVE_TPUT" ] && echo '	@tput setaf 3'
-    echo "	\$(Q)cd \$(TESTRUNDIR) && if ./${RUNIT}; then \\"
-    [ "$HAVE_TPUT" ] && echo "		tput bold;tput setaf 2; \\"
-    			echo "		echo 'TEST PASS'; \\"
-    			echo "		echo '\$@' >> \$(TESTPASS); \\"
-    [ "$HAVE_TPUT" ] && echo "		tput sgr0; \\"
-    			echo "	else \\"
-    [ "$HAVE_TPUT" ] && echo "		tput bold;tput setaf 1; \\"
-    			echo "		echo 'TEST FAILED'; \\"
-    			echo "		echo '\$@' >> \$(TESTFAIL); \\"
-    [ "$HAVE_TPUT" ] && echo "		tput sgr0; \\"
-    			echo "	fi"
-}
-
 write_test()
 {
     TEST="$1"
@@ -131,13 +119,8 @@ write_test()
     for SOURCE in "$@"; do
 	ensure_file_exists "$TESTDIR/$SOURCE" TEST-SOURCE
 
-	echo "	\$(Q)cp \$(TESTDIR)/$SOURCE \$(TESTRUNDIR)/UTESTS"
-	echo "	@echo '[ZUTZCPC]  ' \$(SUBDIR)/\$@"
-	echo "	\$(Q)cd \$(TESTRUNDIR) && ./ZUTZCPC"
-	echo "	@echo '[COBC,LINK]' \$(SUBDIR)/\$@"
-	echo "	\$(Q)\$(COBC) -x \$(COBFLAGS) -I \$(CUTCOPY) -o \$(TESTRUNDIR)/unittest \$(TESTRUNDIR)/TESTPRG"
-	echo "	@echo '[TEST]     ' \$(SUBDIR)/\$@"
-	write_test_execution_with 'unittest'
+	echo "	\$(call prepare_test,$SOURCE,-x,unittest)"
+	echo "	\$(call execute_test,unittest)"
     done
     echo
 
@@ -158,12 +141,8 @@ write_test_with_driver()
 	ensure_file_exists "$TESTDIR/$SOURCE" TEST-SOURCE
 
 	MODULE="${TEST%.*}.so"
-	echo "	\$(Q)cp \$(TESTDIR)/$SOURCE \$(TESTRUNDIR)/UTESTS"
-	echo "	@echo '[ZUTZCPC]  ' \$(SUBDIR)/\$@"
-	echo "	\$(Q)cd \$(TESTRUNDIR) && ./ZUTZCPC"
-	echo "	@echo '[COBC,LINK]' \$(SUBDIR)/\$@"
-	echo "	\$(Q)\$(COBC) -b \$(COBFLAGS) -I \$(CUTCOPY) -o \$(TESTRUNDIR)/$MODULE \$(TESTRUNDIR)/TESTPRG"
-	write_test_execution_with 'driver'
+	echo "	\$(call prepare_test,$SOURCE,-b,$MODULE)"
+	echo "	\$(call execute_test,driver)"
     done
     echo
 
@@ -214,7 +193,35 @@ else
     OUTPUT="-stdout"
 fi
 
+
+echo '# $(1) executable to run'
+echo 'define execute_test'
+echo      "	@echo '[TEST]     ' \$(SUBDIR)/\$@"
+echo_tput "	@tput setaf 3"
+echo      "	\$(Q)cd \$(TESTRUNDIR) && if ./\$(1); then \\"
+echo_tput "		tput bold;tput setaf 2; \\"
+echo      "		echo 'TEST PASS'; \\"
+echo      "		echo '\$@' >> \$(TESTPASS); \\"
+echo_tput "		tput sgr0; \\"
+echo      "	else \\"
+echo_tput "		tput bold;tput setaf 1; \\"
+echo      "		echo 'TEST FAILED'; \\"
+echo      "		echo '\$@' >> \$(TESTFAIL); \\"
+echo_tput "		tput sgr0; \\"
+echo      "	fi"
+echo 'endef'
+
 cat <<'EOF'
+
+# $(1) source file  $(2) compile flag (-x or -b)  $(3) target file
+define prepare_test
+	$(Q)cp $(TESTDIR)/$(1) $(TESTRUNDIR)/UTESTS
+	@echo '[ZUTZCPC]  ' $(SUBDIR)/$@
+	$(Q)cd $(TESTRUNDIR) && ./ZUTZCPC
+	@echo '[COBC,LINK]' $(SUBDIR)/$@
+	$(Q)$(COBC) $(2) $(COBFLAGS) -I $(CUTCOPY) -o $(TESTRUNDIR)/$(3) $(TESTRUNDIR)/TESTPRG
+endef
+
 COPYBOOKS := $(BUILDBASE)/copybook.timestamp
 
 .PHONY: build test update-copybooks prepare-test
