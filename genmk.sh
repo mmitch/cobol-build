@@ -41,7 +41,7 @@ parse_build()
 	    ;;
 
 	*)
-	    abend "unknown build target type: $TYPE"
+	    abend "unknown build target type: $TYPE ; valid build target types are: EXECUTABLE, MODULE"
 	;;
     esac
     shift
@@ -144,7 +144,7 @@ write_test_with_driver()
 
 parse_test()
 {
-    [ "${1^^}" = SOURCE ] || abend "unknown test target type: $1"
+    [ "${1^^}" = SOURCE ] || abend "unknown test target type: $1 ; valid test target types are: USING"
     shift
 
     SOURCE="$1"
@@ -228,7 +228,7 @@ while IFS= read -r LINE; do
 	    ;;
 	
 	*)
-	    abend "unknown verb: $VERB"
+	    abend "unknown verb: $VERB ; valid verbs are: BUILD, TEST"
 	;;
     esac
     
