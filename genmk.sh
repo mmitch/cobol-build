@@ -23,12 +23,28 @@ ensure_file_exists()
     [ -r "$FILE" ] || abend "$TYPE \`$FILE' referenced in \`$LINE' is not readable"
 }
 
+check_token()
+{
+    TOKEN="${1^}"
+    local TOKEN_ORIG="$1" TOKEN_TYPE="$2"
+    shift 2
+
+    for T in $*; do
+	if [ "$TOKEN" = "$T" ]; then
+	    return
+	fi
+    done
+
+    abend "unknown $TOKEN_TYPE: $TOKEN_ORIG  (valid ${TOKEN_TYPE}s are $*)"
+}
+
 parse_build()
 {
-    TYPE="$1"
+    check_token "$1" 'build target type' EXECUTABLE MODULE
+    TYPE="$TOKEN"
     shift
 
-    case "${TYPE^^}" in
+    case "$TYPE" in
 
 	EXECUTABLE)
 	    TARGET="$1"
@@ -41,11 +57,10 @@ parse_build()
 	    ;;
 
 	*)
-	    abend "unknown build target type: $TYPE ; valid build target types are: EXECUTABLE, MODULE"
+	    abend "broken type token check for $TYPE"
 	;;
     esac
     shift
-    TYPE=${TYPE^^}
 
     [ "${1^^}" = USING ] || abend "expected USING, but got: $1"
     shift
@@ -144,7 +159,7 @@ write_test_with_driver()
 
 parse_test()
 {
-    [ "${1^^}" = SOURCE ] || abend "unknown test target type: $1 ; valid test target types are: USING"
+    check_token "$1" 'test target type' SOURCE
     shift
 
     SOURCE="$1"
@@ -214,10 +229,11 @@ while IFS= read -r LINE; do
 
     set -- $LINE
 
-    VERB="$1"
+    check_token "$1" 'verb' BUILD TEST
+    VERB="$TOKEN"
     shift
     
-    case "${VERB^^}" in
+    case "$VERB" in
 
 	BUILD)
 	    parse_build "$@"
@@ -228,7 +244,7 @@ while IFS= read -r LINE; do
 	    ;;
 	
 	*)
-	    abend "unknown verb: $VERB ; valid verbs are: BUILD, TEST"
+	    abend "broken verb check for $VERB"
 	;;
     esac
     
