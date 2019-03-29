@@ -47,3 +47,6 @@ clean:
 
 test:
 	$(MAKE) -C $(BUILDROOT) $@
+
+autotest:
+	$(MAKE) -C $(BUILDROOT) $@
