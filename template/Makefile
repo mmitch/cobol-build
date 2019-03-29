@@ -50,3 +50,7 @@ test:
 
 autotest:
 	$(MAKE) -C $(BUILDROOT) $@
+
+update-cobol-build:
+	cd $(BUILDROOT) && git pull origin master
+	git commit $(BUILDROOT) -e -m 'update cobol-build'
