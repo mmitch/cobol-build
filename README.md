@@ -70,13 +70,12 @@ needs `inotifywait` from the _inotify tools_.
 how to update
 -------------
 
-If you use _cobol-build_ as a git submodule _and_ use the `Makefile`
-template, just run `make update-cobol-build`.  The update will be
-turned into a git commit and you can edit the default commit message
-to your taste.
+### if you use _cobol-build_ as a git submodule and use the `Makefile` template
 
-If you use _cobol-build_ as a git submodule but don't use the
-`Makefile` template, you have to do the steps manually:
+Run `make update-cobol-build`.  The update will be turned into a git commit
+and you can edit the default commit message to your taste.
+
+### if you use _cobol-build_ as a git submodule but don't use the `Makefile` template
 
 1. enter your _cobol-build_ directory
 
@@ -92,9 +91,10 @@ If you use _cobol-build_ as a git submodule but don't use the
      next call to `make` will revert _cobol-build_ to the version you
      had before the update
 
-If you don't use _cobol-build_ as a git submodule, just delete the
-existing _cobol-build_ directory, download a newer version and install
-it into a subdirectory like during the original installation.
+### if you don't use _cobol-build_ as a git submodule
+
+Delete the existing _cobol-build_ directory, download a newer version
+and install it into a subdirectory like during the original installation.
 
 
 a note on filenames
