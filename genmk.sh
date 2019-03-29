@@ -5,9 +5,11 @@ HAVE_TPUT="$(command -v tput || true)"
 abend()
 {
     local MESSAGE="$*"
+    local POSITION="[$SUBDIR/build.txt:$LINE_NUMBER]"
     exec 1>&2
     [ "$HAVE_TPUT" ] && tput setaf 1 && tput bold
-    echo "[$SUBDIR:$(basename "$0")] ${MESSAGE:-'unkown error'}"
+    [ "$LINE" ] && echo "$POSITION $LINE"
+    echo "$POSITION ${MESSAGE:-'unkown error'}"
     [ "$HAVE_TPUT" ] && tput sgr0
 
     [ "$OUTPUT" != '-stdout' ] && rm "$OUTPUT"
@@ -35,7 +37,16 @@ check_token()
 	fi
     done
 
-    abend "unknown $TOKEN_TYPE: $TOKEN_ORIG  (valid ${TOKEN_TYPE}s are $*)"
+    abend "unknown $TOKEN_TYPE: $TOKEN_ORIG   valid ${TOKEN_TYPE}s: $*"
+}
+
+check_not_empty()
+{
+    local TOKEN="$1" TYPE="$2"
+
+    if [ -z "$TOKEN" ]; then
+	abend "expected $TYPE, but none given"
+    fi
 }
 
 parse_build()
@@ -48,11 +59,13 @@ parse_build()
 
 	EXECUTABLE)
 	    TARGET="$1"
+	    check_not_empty "$TARGET" 'executable filename'
 	    LINKFLAG=-x
 	    ;;
 
 	MODULE)
 	    TARGET="$1.so"
+	    check_not_empty "$TARGET" 'module filename'
 	    LINKFLAG=-b
 	    ;;
 
@@ -163,6 +176,7 @@ parse_test()
     shift
 
     SOURCE="$1"
+    check_not_empty "$SOURCE" 'test source filename'
     shift
 
     if [ "${1^^}" = WITH ] && [ "${2^^}" = DRIVER ]; then
@@ -216,8 +230,11 @@ EOF
 
 declare -A TARGETS OBJECTS OBJECTFLAGS TESTS
 
+LINE_NUMBER=0
 while IFS= read -r LINE; do
 
+    LINE_NUMBER=$(( LINE_NUMBER + 1 ))
+    
     # remove comments
     LINE="${LINE%%#*}"
 
