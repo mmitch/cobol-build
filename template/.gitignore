@@ -1,0 +1,8 @@
+# ignore backup files
+*~
+
+# ignore build directories
+*/build/
+
+# ignore target directories
+*/target/
